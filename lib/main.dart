@@ -2,8 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:window_size/window_size.dart';
+
+import 'app_routing/app_pages.dart';
+import 'getx_dependancies.dart';
+import 'themes/main_theme.dart';
 
 void main() {
   if (!kIsWeb && (Platform.isLinux || Platform.isMacOS || Platform.isWindows)) {
@@ -30,12 +35,18 @@ class MyApp extends StatelessWidget {
   final String? title;
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Sync App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: title ?? ''),
+    return GetMaterialApp(
+      title: title ?? '',
+      initialRoute: AppPages.initial,
+      debugShowCheckedModeBanner: false,
+      theme: MainTheme.lightTheme,
+      darkTheme: MainTheme.darkTheme,
+      defaultTransition: Transition.rightToLeftWithFade,
+      transitionDuration: const Duration(milliseconds: 500),
+      themeMode: ThemeMode.system,
+      getPages: AppPages.routes,
+      initialBinding: ProjectBindings(),
+      // home: SplashScreen(),
     );
   }
 }
