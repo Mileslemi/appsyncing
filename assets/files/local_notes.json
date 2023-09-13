@@ -1,0 +1,54 @@
+[
+    {
+        "id": 1,
+        "posted": "2023-09-13T08:54:40Z",
+        "title": "Note Title1",
+        "description": "From Json File",
+        "tracking_id": "ANDROIDNOTE1",
+        "last_modified": "2023-09-13T09:09:18.535124Z",
+        "user": "mileslemi",
+        "branch_name": "ANDROID",
+        "master_id": null,
+        "synced": 0,
+        "merge_conflict": 0
+    },
+    {
+        "id": 2,
+        "posted": "2023-09-13T17:40:23Z",
+        "title": "Note Title2",
+        "description": "From Json File",
+        "tracking_id": "ANDROIDNOTE2",
+        "last_modified": "2023-09-13T18:19:34.472821Z",
+        "user": "mileslemi",
+        "branch_name": "ANDROID",
+        "master_id": null,
+        "synced": 0,
+        "merge_conflict": 0
+    },
+    {
+        "id": 3,
+        "posted": "2023-09-13T18:21:00Z",
+        "title": "Note Title3",
+        "description": "From Json File",
+        "tracking_id": "ANDROIDNOTE3",
+        "last_modified": "2023-09-13T18:21:53.965691Z",
+        "user": "mileslemi",
+        "branch_name": "ANDROID",
+        "master_id": null,
+        "synced": 0,
+        "merge_conflict": 0
+    },
+    {
+        "id": 4,
+        "posted": "2023-09-13T18:24:00Z",
+        "title": "Note Title4",
+        "description": "From Json File",
+        "tracking_id": "ANDROIDNOTE4",
+        "last_modified": "2023-09-13T18:56:00.912325Z",
+        "user": "mileslemi",
+        "branch_name": "ANDROID",
+        "master_id": null,
+        "synced": 0,
+        "merge_conflict": 0
+    }
+]

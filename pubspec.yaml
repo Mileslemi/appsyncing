@@ -35,6 +35,25 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  google_fonts: ^3.0.0
+  desktop_window: ^0.4.0
+  provider: ^5.0.0
+  path: any
+  intl: ^0.18.1 #mostly date objects
+  sqflite: ^2.2.0
+  sqflite_common: ^2.3.0
+  sqflite_common_ffi: ^2.2.5 #like sqflite but conversant with all platforms
+  flutter_staggered_grid_view: ^0.7.0
+  get: ^4.6.5
+  line_awesome_flutter: ^2.0.0
+  http: ^0.13.5
+  connectivity_plus: ^3.0.3
+  get_storage: ^2.1.1
+  window_size:
+    git:
+      url: https://github.com/google/flutter-desktop-embedding
+      path: plugins/window_size
+
 
 dev_dependencies:
   flutter_test:
@@ -59,9 +78,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/files/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
