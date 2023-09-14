@@ -1,4 +1,5 @@
 import 'package:appsyncing/app_routing/app_routes.dart';
+import 'package:appsyncing/views/home/dashboard.dart';
 import 'package:get/get.dart';
 
 import '../views/login/login.dart';
@@ -12,6 +13,10 @@ class AppPages {
     GetPage(
       name: AppRoutes.login,
       page: () => const LoginScreen(),
+    ),
+    GetPage(
+      name: AppRoutes.dashboard,
+      page: () => const DashBoard(),
     )
   ];
 }

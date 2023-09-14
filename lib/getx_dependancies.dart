@@ -1,4 +1,5 @@
 import 'package:appsyncing/repository/authentication/authentication_controller.dart';
+import 'package:appsyncing/views/home/dashboard_controller.dart';
 import 'package:appsyncing/views/login/login_controller.dart';
 import 'package:get/get.dart';
 
@@ -7,5 +8,6 @@ class ProjectBindings implements Bindings {
   void dependencies() {
     Get.put(AuthenticationController(), permanent: true);
     Get.lazyPut(() => LoginController(), fenix: true);
+    Get.lazyPut(() => DashBoardController(), fenix: true);
   }
 }

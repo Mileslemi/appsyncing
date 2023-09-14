@@ -13,7 +13,7 @@ import 'themes/main_theme.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (!kIsWeb && (Platform.isLinux || Platform.isMacOS || Platform.isWindows)) {
-    setWindowMinSize(const Size(1000, 800));
+    setWindowMinSize(const Size(800, 600));
   }
   if (Platform.isLinux || Platform.isWindows) {
     // Use the ffi version on linux and windows

@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.appsyncing">
    <application
-        android:label="appsyncing"
+        android:label="Syncing"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

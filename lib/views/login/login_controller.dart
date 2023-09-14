@@ -30,8 +30,7 @@ class LoginController extends GetxController {
   void login(String username, String password) {
     if (username == authController.user.value.username &&
         password == authController.user.value.password) {
-      //Get.offAndToNamed(AppRoutes.home);
-      print("right yeah");
+      Get.offAndToNamed(AppRoutes.dashboard);
     } else {
       Get.snackbar("Invalid!", "Wrong Credentials");
     }
