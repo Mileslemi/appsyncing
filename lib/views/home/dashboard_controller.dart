@@ -2,6 +2,8 @@ import 'package:appsyncing/repository/authentication/authentication_controller.d
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../allnotes/allnotes.dart';
+
 class DashBoardController extends GetxController {
   static DashBoardController get instance => Get.find();
 
@@ -13,9 +15,9 @@ class DashBoardController extends GetxController {
 
   RxString branchName = "".obs;
 
-  RxString lastSync = "2023-09-13 ...".obs;
-
-  List<Widget> pages = <Widget>[];
+  List<Widget> pages = <Widget>[
+    const AllNotes(),
+  ];
   @override
   void onInit() {
     // currentPageWidget = Rx<Widget>(pages[currentPage.value]);
@@ -26,6 +28,10 @@ class DashBoardController extends GetxController {
   }
 
   void changePage({required int toPage}) {
-    currentPageWidget.value = pages[toPage];
+    if (toPage > pages.length) {
+      currentPageWidget.value = pages[0];
+    } else {
+      currentPageWidget.value = pages[toPage];
+    }
   }
 }

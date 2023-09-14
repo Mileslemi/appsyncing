@@ -13,14 +13,8 @@ class DashBoard extends StatelessWidget {
         title: Obx(() => Text("Branch: ${dashboardCtrl.branchName}")),
         centerTitle: true,
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Obx(() => Text("Last Sync: ${dashboardCtrl.lastSync}")),
-          Expanded(child: ListView()),
-        ],
-      ),
+      body: Obx(
+          () => dashboardCtrl.pages.elementAt(dashboardCtrl.currentPage.value)),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () {},

@@ -41,14 +41,14 @@
     {
         "id": 4,
         "posted": "2023-09-13T18:24:00Z",
-        "title": "Note Title4",
-        "description": "From Json File",
-        "tracking_id": "ANDROIDNOTE4",
+        "title": "From Main",
+        "description": "From Json File, with MAIN as origin",
+        "tracking_id": "MAINNOTE1",
         "last_modified": "2023-09-13T18:56:00.912325Z",
         "user": "mileslemi",
-        "branch_name": "ANDROID",
-        "master_id": null,
-        "synced": 0,
+        "branch_name": "MAIN",
+        "master_id": 1,
+        "synced": 1,
         "merge_conflict": 0
     }
 ]
