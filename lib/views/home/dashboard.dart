@@ -23,7 +23,11 @@ class DashBoard extends StatelessWidget {
         () => BottomNavigationBar(
             currentIndex: dashboardCtrl.currentPage.value,
             onTap: (value) {
-              dashboardCtrl.currentPage.value = value;
+              if (value > dashboardCtrl.pages.length - 1) {
+                dashboardCtrl.currentPage.value = 0;
+              } else {
+                dashboardCtrl.currentPage.value = value;
+              }
             },
             items: const [
               BottomNavigationBarItem(

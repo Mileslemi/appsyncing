@@ -20,7 +20,7 @@ class DashBoardController extends GetxController {
   ];
   @override
   void onInit() {
-    // currentPageWidget = Rx<Widget>(pages[currentPage.value]);
+    currentPageWidget = Rx<Widget>(pages[currentPage.value]);
     branchName.value = authController.branch.value.branchName ?? '';
 
     ever(currentPage, (val) => changePage(toPage: val));
@@ -28,10 +28,6 @@ class DashBoardController extends GetxController {
   }
 
   void changePage({required int toPage}) {
-    if (toPage > pages.length) {
-      currentPageWidget.value = pages[0];
-    } else {
-      currentPageWidget.value = pages[toPage];
-    }
+    currentPageWidget.value = pages[toPage];
   }
 }
