@@ -25,6 +25,8 @@ class AddEditeNote extends StatelessWidget {
             Form(
               key: formKey,
               child: ListView(
+                padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * .1),
                 children: [
                   note == null
                       ? const SizedBox()
@@ -35,6 +37,9 @@ class AddEditeNote extends StatelessWidget {
                               enabled: false,
                               decoration: const InputDecoration(
                                   prefixIcon: Icon(Icons.track_changes)),
+                            ),
+                            const SizedBox(
+                              height: defaultSpacing,
                             ),
                             NoteDetailRow(
                                 title: "Creator", detail: "${note?.user}"),
@@ -67,6 +72,8 @@ class AddEditeNote extends StatelessWidget {
                   ),
                   TextFormField(
                     keyboardType: TextInputType.text,
+                    minLines: 4,
+                    maxLines: 5,
                     decoration: const InputDecoration(
                       labelText: "Description",
                       hintText: "Note Description",
@@ -92,20 +99,24 @@ class AddEditeNote extends StatelessWidget {
                     top: 5,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 4, vertical: 8),
+                          horizontal: 6, vertical: 8),
                       color: const Color.fromARGB(120, 0, 0, 0),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           (note?.synced ?? false)
-                              ? IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(Icons.upload),
-                                )
-                              : const Icon(
+                              ? const Icon(
                                   Icons.add_task_outlined,
                                   semanticLabel: "Sync",
                                   color: Colors.green,
+                                )
+                              : IconButton(
+                                  onPressed: () {
+                                    // if mergeConflict is true then don't sync until resolve
+                                    // resolving is to compare the two rows, the other being in theConflicts table,
+                                    // and updating this one, setting conflict to false, and deleting the row in theConflict table
+                                  },
+                                  icon: const Icon(Icons.upload),
                                 ),
                           (note?.mergeConflict ?? false)
                               ? IconButton(
@@ -133,14 +144,24 @@ class NoteDetailRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Text(title),
-        Expanded(
-          child: TextFormField(
-            initialValue: detail,
-            enabled: false,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(title),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * .6,
+              child: TextFormField(
+                initialValue: detail,
+                enabled: false,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(
+          height: defaultSpacing,
         ),
       ],
     );

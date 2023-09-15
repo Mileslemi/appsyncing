@@ -32,7 +32,7 @@ Widget buildNotesDeskTop(List<NoteModel> notes) => GridView.custom(
         childCount: notes.length,
         (context, index) {
           final NoteModel note = notes[index];
-          return GestureDetector(
+          return InkWell(
               onTap: () => Get.to(
                     () => AddEditeNote(
                       title: "Update Note",

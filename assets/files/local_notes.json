@@ -36,7 +36,7 @@
         "branch_name": "ANDROID",
         "master_id": null,
         "synced": 0,
-        "merge_conflict": 0
+        "merge_conflict": 1
     },
     {
         "id": 4,
