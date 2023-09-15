@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:appsyncing/common_widgets/loading_widget.dart';
 import 'package:appsyncing/common_widgets/note_display.dart';
 import 'package:appsyncing/views/allnotes/allnotes_controller.dart';
@@ -33,7 +35,9 @@ class AllNotes extends StatelessWidget {
               return Stack(
                 children: [
                   controller.allLocalNotes.isNotEmpty
-                      ? buildNotes(controller.allLocalNotes)
+                      ? (Platform.isIOS || Platform.isAndroid)
+                          ? buildNotes(controller.allLocalNotes)
+                          : buildNotesDeskTop(controller.allLocalNotes)
                       : const Center(
                           child: Text("No Notes...."),
                         ),

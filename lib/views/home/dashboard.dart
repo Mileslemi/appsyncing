@@ -1,3 +1,4 @@
+import 'package:appsyncing/views/addEditNote/add_edit_note.dart';
 import 'package:appsyncing/views/home/dashboard_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,12 +13,21 @@ class DashBoard extends StatelessWidget {
       appBar: AppBar(
         title: Obx(() => Text("Branch: ${dashboardCtrl.branchName}")),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.refresh),
+          )
+        ],
       ),
       body: Obx(
           () => dashboardCtrl.pages.elementAt(dashboardCtrl.currentPage.value)),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
-        onPressed: () {},
+        onPressed: () => Get.to(
+          () => AddEditeNote(title: "Add Note"),
+          //arguments: {"": ""},
+        ),
       ),
       bottomNavigationBar: Obx(
         () => BottomNavigationBar(

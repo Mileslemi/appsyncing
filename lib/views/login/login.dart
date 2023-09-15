@@ -9,11 +9,12 @@ import '../../constants/sizes.dart';
 import 'login_controller.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+  LoginScreen({super.key});
+
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    var formKey = GlobalKey<FormState>();
     final loginController = Get.find<LoginController>();
 
     return SafeArea(
@@ -22,7 +23,7 @@ class LoginScreen extends StatelessWidget {
         key: formKey,
         child: Padding(
           padding: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * .25),
+              horizontal: MediaQuery.of(context).size.width * .1),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -49,6 +50,7 @@ class LoginScreen extends StatelessWidget {
               ),
               TextFormField(
                 controller: loginController.username,
+                keyboardType: TextInputType.text,
                 decoration: const InputDecoration(
                   labelText: "Username",
                   hintText: "Username",

@@ -13,7 +13,8 @@ import 'themes/main_theme.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (!kIsWeb && (Platform.isLinux || Platform.isMacOS || Platform.isWindows)) {
-    setWindowMinSize(const Size(800, 600));
+    setWindowMinSize(const Size(1200, 1000));
+    // same as Win32Window::Size size(720, 480); on flutter windows main.cpp
   }
   if (Platform.isLinux || Platform.isWindows) {
     // Use the ffi version on linux and windows
