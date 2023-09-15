@@ -6,6 +6,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 
 import '../views/addEditNote/add_edit_note.dart';
+import 'note_extra_info.dart';
 
 List<Color> noteColors = [
   Colors.grey,
@@ -65,61 +66,40 @@ Widget buildNotes(List<NoteModel> notes) => ListView.builder(
 Widget noteTile(NoteModel note) => Card(
       elevation: 1,
       color: noteColors[Random().nextInt(noteColors.length)],
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text(
                   "Title : ${note.title ?? ''}",
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
                 ),
-                (note.synced ?? false)
-                    ? const Icon(
-                        Icons.add_task_outlined,
-                        semanticLabel: "Sync",
-                        color: Colors.green,
-                      )
-                    : const Icon(
-                        Icons.info,
-                        semanticLabel: "Sync",
-                        color: Colors.amber,
-                      )
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
                 Text(
                   "Branch : ${note.branchName ?? ''}",
                   overflow: TextOverflow.ellipsis,
                   maxLines: 3,
                 ),
-                (note.mergeConflict ?? false)
-                    ? const Icon(
-                        Icons.warning,
-                        semanticLabel: "Conflict",
-                        color: Colors.amber,
-                      )
-                    : const SizedBox()
+                Text(
+                  "Tracking ID: ${note.trackingId ?? ''}",
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 3,
+                ),
+                Text(
+                  "Posted At : ${note.posted ?? ''}",
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 3,
+                ),
               ],
             ),
-            Text(
-              "Tracking ID: ${note.trackingId ?? ''}",
-              overflow: TextOverflow.ellipsis,
-              maxLines: 3,
-            ),
-            Text(
-              "Posted At : ${note.posted ?? ''}",
-              overflow: TextOverflow.ellipsis,
-              maxLines: 3,
-            ),
-          ],
-        ),
+          ),
+          NoteExtraInfo(
+            note: note,
+          )
+        ],
       ),
     );
