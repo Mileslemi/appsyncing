@@ -48,6 +48,7 @@ class AllNotesController extends GetxController {
   }
 
   Future<List<NoteModel>> fetchAllOnlyLocalMadeNotes() async {
+    // notes whose tracking_id match server name somewhere in their string
     return [];
   }
 

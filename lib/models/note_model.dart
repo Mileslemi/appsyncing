@@ -1,7 +1,36 @@
 import 'dart:convert';
 
+const String noteTableName = "note";
+
+class NoteFields {
+  static final List<String> fetchValues = [
+    trackingId,
+    masterId,
+    title,
+    desc,
+    user,
+    branchName,
+    posted,
+    lastModified,
+    synced,
+    mergeConflict
+  ];
+  static String id = "_id";
+  static String trackingId = "trackingId";
+  static String masterId = "masterId";
+  static String title = "title";
+  static String desc = "description ";
+  static String user = "user";
+  static String branchName = "branchName ";
+  static String posted = "posted";
+  static String lastModified = "lastModified";
+  static String synced = "synced";
+  static String mergeConflict = "mergeConflict";
+}
+
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 class NoteModel {
+  int? id;
   String?
       trackingId; //A combination of BranchName/server + TableName + Auto_int
   //we'll get the autoInt: when creating a note object in db an id will be returned, use that.
@@ -15,6 +44,7 @@ class NoteModel {
   bool? synced;
   bool? mergeConflict;
   NoteModel({
+    this.id,
     this.trackingId,
     this.masterId,
     this.title,
@@ -29,6 +59,7 @@ class NoteModel {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      '_id': id,
       'tracking_id': trackingId,
       'master_id': masterId,
       'title': title,
@@ -68,4 +99,30 @@ class NoteModel {
 
   factory NoteModel.fromJson(String source) =>
       NoteModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  NoteModel copyWith({
+    String? trackingId,
+    int? masterId,
+    String? title,
+    String? description,
+    String? user,
+    String? branchName,
+    DateTime? posted,
+    DateTime? lastModified,
+    bool? synced,
+    bool? mergeConflict,
+  }) {
+    return NoteModel(
+      trackingId: trackingId ?? this.trackingId,
+      masterId: masterId ?? this.masterId,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      user: user ?? this.user,
+      branchName: branchName ?? this.branchName,
+      posted: posted ?? this.posted,
+      lastModified: lastModified ?? this.lastModified,
+      synced: synced ?? this.synced,
+      mergeConflict: mergeConflict ?? this.mergeConflict,
+    );
+  }
 }

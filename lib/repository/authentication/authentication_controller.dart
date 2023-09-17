@@ -13,12 +13,12 @@ class AuthenticationController extends GetxController {
   ]);
 
   late Rx<Branch> branch;
-  late Rx<User> user;
+  late Rx<BranchUser> user;
 
   @override
   void onInit() {
     branch = Rx(Branch(branchName: "DESKTOP"));
-    user = Rx(User(username: "mileslemi", password: "1234"));
+    user = Rx(BranchUser(username: "mileslemi", password: "1234"));
     super.onInit();
   }
 }
