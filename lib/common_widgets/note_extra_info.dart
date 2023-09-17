@@ -17,15 +17,23 @@ class NoteExtraInfo extends StatelessWidget {
       top: 5,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
-        color: const Color.fromARGB(120, 0, 0, 0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            (note?.synced ?? false)
-                ? const Icon(
-                    Icons.add_task_outlined,
-                    semanticLabel: "Sync",
-                    color: Colors.green,
+        color: const Color.fromARGB(37, 0, 0, 0),
+        child: (note?.synced ?? false)
+            ? const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(
+                  Icons.add_task_outlined,
+                  semanticLabel: "Sync",
+                  color: Colors.green,
+                ),
+              )
+            : (note?.mergeConflict ?? false)
+                ? IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.warning,
+                      color: Colors.amber,
+                    ),
                   )
                 : IconButton(
                     onPressed: () {
@@ -33,16 +41,11 @@ class NoteExtraInfo extends StatelessWidget {
                       // resolving is to compare the two rows, the other being in theConflicts table,
                       // and updating this one, setting conflict to false, and deleting the row in theConflict table
                     },
-                    icon: const Icon(Icons.upload),
+                    icon: const Icon(
+                      Icons.upload,
+                      color: Colors.white,
+                    ),
                   ),
-            (note?.mergeConflict ?? false)
-                ? IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.warning),
-                  )
-                : const SizedBox(),
-          ],
-        ),
       ),
     );
   }

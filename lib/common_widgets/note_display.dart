@@ -52,14 +52,18 @@ Widget buildNotes(List<NoteModel> notes) => ListView.builder(
       itemBuilder: (context, index) {
         final NoteModel note = notes[index];
         return GestureDetector(
-            onTap: () => Get.to(
-                  () => AddEditeNote(
-                    title: "Update Note",
-                    note: note,
-                  ),
-                  //arguments: {"": ""},
-                ),
-            child: noteTile(note));
+          onTap: () => Get.to(
+            () => AddEditeNote(
+              title: "Update Note",
+              note: note,
+            ),
+            //arguments: {"": ""},
+          ),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * .25,
+            child: noteTile(note),
+          ),
+        );
       },
     );
 

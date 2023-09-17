@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:appsyncing/models/note_model.dart';
 import 'package:flutter/material.dart';
 
@@ -27,7 +29,7 @@ class AddEditeNote extends StatelessWidget {
               key: formKey,
               child: ListView(
                 padding: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width * .1),
+                    horizontal: MediaQuery.of(context).size.width * .05),
                 children: [
                   note == null
                       ? const SizedBox()
@@ -113,19 +115,27 @@ class NoteDetailRow extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(title),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * .6,
-              child: TextFormField(
+        (Platform.isIOS || Platform.isAndroid)
+            ? TextFormField(
                 initialValue: detail,
                 enabled: false,
+                decoration: InputDecoration(
+                  labelText: title,
+                ),
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(title),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * .6,
+                    child: TextFormField(
+                      initialValue: detail,
+                      enabled: false,
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
         const SizedBox(
           height: defaultSpacing,
         ),
