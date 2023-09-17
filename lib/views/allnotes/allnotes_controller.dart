@@ -24,7 +24,7 @@ class AllNotesController extends GetxController {
 
   Future<List<NoteModel>> fetchAllLocalNotes() async {
     fetching.value = true;
-    await Future.delayed(const Duration(seconds: 3));
+    //await Future.delayed(const Duration(seconds: 3));
     try {
       final data = await rootBundle.loadString("assets/files/local_notes.json");
 
@@ -44,6 +44,14 @@ class AllNotesController extends GetxController {
     }
     fetching.value = false;
     update();
+    return [];
+  }
+
+  Future<List<NoteModel>> fetchAllOnlyLocalMadeNotes() async {
+    return [];
+  }
+
+  Future<List<NoteModel>> fetchConflictNotes() async {
     return [];
   }
 

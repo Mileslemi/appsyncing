@@ -12,7 +12,9 @@ List<Color> noteColors = [
   Colors.grey,
   Colors.blueGrey,
   Colors.brown,
-  Colors.purple
+  Colors.purple,
+  Colors.cyan,
+  Colors.deepOrange,
 ];
 Widget buildNotesDeskTop(List<NoteModel> notes) => GridView.custom(
       gridDelegate: SliverWovenGridDelegate.count(

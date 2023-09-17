@@ -98,7 +98,9 @@ class AddEditeNote extends StatelessWidget {
                             Expanded(
                               child: ElevatedButton(
                                 onPressed: () {
-                                  if (formKey.currentState!.validate()) {}
+                                  if (formKey.currentState!.validate()) {
+                                    // only perfomed online.
+                                  }
                                 },
                                 child: const Text("DELETE"),
                               ),
