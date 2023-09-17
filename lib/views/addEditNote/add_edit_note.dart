@@ -86,13 +86,36 @@ class AddEditeNote extends StatelessWidget {
                   const SizedBox(
                     height: defaultSpacing,
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {}
-                    },
-                    child:
-                        note == null ? const Text("ADD") : const Text("UPDATE"),
-                  )
+                  note == null
+                      ? ElevatedButton(
+                          onPressed: () {
+                            if (formKey.currentState!.validate()) {}
+                          },
+                          child: const Text("ADD"),
+                        )
+                      : Row(
+                          children: [
+                            Expanded(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  if (formKey.currentState!.validate()) {}
+                                },
+                                child: const Text("DELETE"),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  if (formKey.currentState!.validate()) {}
+                                },
+                                child: const Text("UPDATE"),
+                              ),
+                            )
+                          ],
+                        )
                 ],
               ),
             ),
