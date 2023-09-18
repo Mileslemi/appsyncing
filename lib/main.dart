@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:appsyncing/db/appsync_db.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -26,6 +27,9 @@ void main() async {
   if (Platform.isAndroid || Platform.isIOS) {
     title = "Mobile Platform";
   }
+
+  //initialize database
+  await AppSyncDatabase.instance.database;
   runApp(MyApp(
     title: title,
   ));

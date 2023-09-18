@@ -29,9 +29,18 @@ class AppSyncDatabase {
     final dbDirectory = await getDatabasesPath();
 
     final dbPath = p.join(dbDirectory, dbName);
-
+    // if not db is found on that path, onCreate will be called
+    // [onCreate] is called if the database did not exist prior to calling [openDatabase]
     return await openDatabase(dbPath, version: 1, onCreate: _createTables);
   }
+
+  // FutureOr<void> _onUpgrade(db, oldVersion, newVersion) {
+  //   // [onUpgrade] is called if either of the following conditions are met:
+
+  //   //   [onCreate] is not specified
+  //   //   The database already exists and [version] is higher than the last database version
+  //   //   In the first case where [onCreate] is not specified, [onUpgrade] is called with its [oldVersion] parameter as 0. In the second case, you can perform the necessary migration procedures to handle the differing schema
+  // }
 
   FutureOr<void> _createTables(Database db, int version) async {
     const idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
@@ -43,7 +52,7 @@ class AppSyncDatabase {
 
 //  note table
     await db.execute('''
-CREATE TABLE $noteTableName(
+CREATE TABLE $noteTable(
   ${NoteFields.id} $idType,
   ${NoteFields.trackingId} $textType UNIQUE,
   ${NoteFields.masterId} $intType,
@@ -61,7 +70,7 @@ CREATE TABLE $noteTableName(
 // branch table
 
     await db.execute('''
-CREATE TABLE $branchTableName(
+CREATE TABLE $branchTable(
   ${BranchFields.id} $idType,
   ${BranchFields.branchName} $textType,
   ${BranchFields.createdAt} $textType

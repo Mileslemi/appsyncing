@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-const String noteTableName = "note";
+const String noteTable = "note";
 
 class NoteFields {
   static final List<String> fetchValues = [
