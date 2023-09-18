@@ -10,7 +10,7 @@ class LoginController extends GetxController {
 
   final authController = Get.find<AuthenticationController>();
 
-  List<Branch> branches = [];
+  RxList<MasterBranch> masterBranches = RxList([]);
 
   Rx<Branch> thisBranch = Rx(Branch());
 
@@ -21,7 +21,7 @@ class LoginController extends GetxController {
 
   @override
   void onInit() {
-    branches = authController.branches;
+    masterBranches.value = authController.masterBranches;
 
     thisBranch.value = authController.branch.value;
     super.onInit();

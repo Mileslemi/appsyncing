@@ -28,22 +28,35 @@ class LoginScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Obx(
-                () => DropdownButtonFormField<String>(
-                  items: loginController.branches
-                      .map<DropdownMenuItem<String>>((branch) =>
-                          DropdownMenuItem<String>(
-                              value: branch.branchName,
-                              child: Text(branch.branchName!)))
-                      .toList(),
-                  value: loginController.thisBranch.value.branchName,
-                  disabledHint:
-                      Text(loginController.thisBranch.value.branchName ?? ''),
-                  onChanged: loginController.thisBranch.value.branchName != null
-                      ? null
-                      : (value) {
-                          // we'll add this value to local table
-                        },
-                ),
+                () => loginController.masterBranches.isNotEmpty
+                    ? DropdownButtonFormField<String>(
+                        items: loginController.masterBranches
+                            .map<DropdownMenuItem<String>>((branch) =>
+                                DropdownMenuItem<String>(
+                                    value: branch.branchName,
+                                    child: Text(branch.branchName!)))
+                            .toList(),
+                        hint: const Text('Choose Branch'),
+                        value: loginController.thisBranch.value.branchName,
+                        disabledHint: Text(
+                            loginController.thisBranch.value.branchName ?? ''),
+                        onChanged:
+                            loginController.thisBranch.value.branchName != null
+                                ? null
+                                : (value) {
+                                    // we'll add this value to local table
+                                  },
+                      )
+                    : TextFormField(
+                        controller: loginController.username,
+                        keyboardType: TextInputType.text,
+                        decoration: const InputDecoration(
+                          enabled: false,
+                          labelText: "Branch",
+                          hintText: "Choose Branch",
+                          prefixIcon: Icon(Icons.person),
+                        ),
+                      ),
               ),
               const SizedBox(
                 height: defaultSpacing,
@@ -66,7 +79,7 @@ class LoginScreen extends StatelessWidget {
                 decoration: const InputDecoration(
                   labelText: "Password",
                   hintText: "Password",
-                  prefixIcon: Icon(Icons.person),
+                  prefixIcon: Icon(Icons.password),
                 ),
               ),
               const SizedBox(

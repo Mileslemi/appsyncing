@@ -63,31 +63,35 @@ class Branch {
 }
 
 // for fetching branches online for first setup, the dropdown option when logging in.
-class MasterBranches {
+class MasterBranch {
+  int? id;
   String? branchName;
   bool? assigned;
-  MasterBranches({
+  MasterBranch({
+    this.id,
     this.branchName,
     this.assigned,
   });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'branchName': branchName,
+      'id': id,
+      'branchname': branchName,
       'assigned': assigned,
     };
   }
 
-  factory MasterBranches.fromMap(Map<String, dynamic> map) {
-    return MasterBranches(
+  factory MasterBranch.fromMap(Map<String, dynamic> map) {
+    return MasterBranch(
+      id: map['id'] != null ? map['id'] as int : null,
       branchName:
-          map['branchName'] != null ? map['branchName'] as String : null,
+          map['branchname'] != null ? map['branchname'] as String : null,
       assigned: map['assigned'] != null ? map['assigned'] as bool : null,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory MasterBranches.fromJson(String source) =>
-      MasterBranches.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory MasterBranch.fromJson(String source) =>
+      MasterBranch.fromMap(json.decode(source) as Map<String, dynamic>);
 }

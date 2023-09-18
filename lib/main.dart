@@ -52,7 +52,6 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       getPages: AppPages.routes,
       initialBinding: ProjectBindings(),
-      // home: SplashScreen(),
     );
   }
 }
