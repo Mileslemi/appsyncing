@@ -33,8 +33,27 @@ class LoginScreen extends StatelessWidget {
                         items: loginController.masterBranches
                             .map<DropdownMenuItem<String>>((branch) =>
                                 DropdownMenuItem<String>(
+                                    enabled: !(branch.assigned ??
+                                        true), //defaulted to true if null, to make that branch name unpickable unless assigned is false
                                     value: branch.branchName,
-                                    child: Text(branch.branchName!)))
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(branch.branchName!),
+                                        (branch.assigned ?? false)
+                                            ? Text(
+                                                'assigned',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodySmall
+                                                    ?.apply(
+                                                        fontStyle:
+                                                            FontStyle.italic),
+                                              )
+                                            : const SizedBox()
+                                      ],
+                                    )))
                             .toList(),
                         hint: const Text('Choose Branch'),
                         value: loginController.thisBranch.value.branchName,

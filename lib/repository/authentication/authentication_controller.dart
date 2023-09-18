@@ -58,8 +58,6 @@ class AuthenticationController extends GetxController {
       try {
         List collection = jsonDecode(s.returnValue);
 
-        print(collection);
-
         List<MasterBranch> fetched =
             collection.map((e) => MasterBranch.fromMap(e)).toList();
         masterBranches.value = fetched;
