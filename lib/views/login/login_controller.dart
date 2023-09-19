@@ -12,21 +12,26 @@ class LoginController extends GetxController {
 
   RxList<FetchedOnlineBranch> fetchedOnlineBranches = RxList([]);
 
-  Rx<LocalBranch> localBranch = Rx(LocalBranch());
+  late Rx<LocalBranch> localBranch;
 
   Rx<FetchedOnlineBranch> selectedOnlineBranch = Rx(FetchedOnlineBranch());
 
   TextEditingController username = TextEditingController();
   TextEditingController password = TextEditingController();
+  TextEditingController localBranchText = TextEditingController();
 
   // find branch name in server
 
   @override
   void onInit() {
     fetchedOnlineBranches.value = authController.fetchedOnlineBranches;
-
-    localBranch.value = authController.localBranch.value;
+    localBranch = authController.localBranch;
+    ever(localBranch, (callback) => changeLocalBranch());
     super.onInit();
+  }
+
+  void changeLocalBranch() {
+    localBranchText.text = localBranch.value.branchName ?? '';
   }
 
   void localLogin({

@@ -27,15 +27,15 @@ class AuthenticationController extends GetxController {
     int count = await BranchTable.branchCount();
     // if count is 0, new db, assert that other tables are empty also, cause maybe this branch table is deleted/corrupted but the server has been in use
     // if so, quick fix would be to change assigned to false in the master to allow user to selct that same server again.
-    print(count);
+
     if (count < 1) {
       // if all empty, then allow user to choose branch[fetched from online master db]
       // disbale those already assigned
-      print("fetching online branches");
+
       fecthOnlineBranches();
     } else if (count == 1) {
       //meaning is equal to 1
-      print("fetching local branch");
+
       fetchLocalBranch();
     }
   }
@@ -82,13 +82,12 @@ class AuthenticationController extends GetxController {
       try {
         Success s = response as Success;
         var data = jsonDecode(s.returnValue);
-        print(data);
+
         //retuned as  { "authenticated": true,  "user": { "first_name": "Miles", "last_name": "Lemi", "email": "mileslemi@gmail.com" } }
         //  or { "authenticated": false}
         authenticated = data['authenticated'];
 
         if (authenticated) {
-          print("yes, is authernticated");
           // set user to add to local table if all goes well adding branch
           Map fetchedUser = data['user'];
           user.value = BranchUser(
@@ -138,11 +137,9 @@ class AuthenticationController extends GetxController {
       // confirm only that added, and one row only exists
       int secondcount = await BranchTable.branchCount();
       if (secondcount == 1) {
-        print("branch added");
         // update master
         bool updated = await updateBranchOnline(id: branch.id!);
         if (updated) {
-          print('updated sucsess');
           return true;
         } else {
           await BranchTable.delete(addedBranch.id!);

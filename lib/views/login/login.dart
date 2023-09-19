@@ -89,7 +89,7 @@ class LoginScreen extends StatelessWidget {
                                   },
                           )
                         : TextFormField(
-                            controller: loginController.username,
+                            controller: loginController.localBranchText,
                             keyboardType: TextInputType.text,
                             decoration: const InputDecoration(
                               enabled: false,
