@@ -3,15 +3,19 @@ import 'package:appsyncing/views/home/dashboard_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../repository/authentication/authentication_controller.dart';
+
 class DashBoard extends StatelessWidget {
   const DashBoard({super.key});
 
   @override
   Widget build(BuildContext context) {
     final dashboardCtrl = Get.find<DashBoardController>();
+    final authCtrl = Get.find<AuthenticationController>();
     return Scaffold(
       appBar: AppBar(
-        title: Obx(() => Text("Branch: ${dashboardCtrl.branchName}")),
+        title:
+            Obx(() => Text("Branch: ${authCtrl.localBranch.value.branchName}")),
         centerTitle: true,
         actions: [
           IconButton(
@@ -24,7 +28,7 @@ class DashBoard extends StatelessWidget {
           () => dashboardCtrl.pages.elementAt(dashboardCtrl.currentPage.value)),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
-        onPressed: () => Get.to(
+        onPressed: () => Get.off(
           () => AddEditeNote(title: "Add Note"),
           //arguments: {"": ""},
         ),

@@ -41,18 +41,19 @@ class BranchUser {
       'firstName': firstName,
       'lastName': lastName,
       'email': email,
-      'isAdmin': isAdmin,
+      'isAdmin': (isAdmin ?? false) ? 1 : 0,
     };
   }
 
   factory BranchUser.fromMap(Map<String, dynamic> map) {
     return BranchUser(
+      id: map["_id"] != null ? map['_id'] as int : null,
       username: map['username'] != null ? map['username'] as String : null,
       password: map['password'] != null ? map['password'] as String : null,
       firstName: map['firstName'] != null ? map['firstName'] as String : null,
       lastName: map['lastName'] != null ? map['lastName'] as String : null,
       email: map['email'] != null ? map['email'] as String : null,
-      isAdmin: map['isAdmin'] != null ? map['isAdmin'] as bool : null,
+      isAdmin: map['isAdmin'] == 1,
     );
   }
 
@@ -64,5 +65,25 @@ class BranchUser {
   @override
   String toString() {
     return 'BranchUser(id: $id, username: $username, password: $password, firstName: $firstName, lastName: $lastName, email: $email, isAdmin: $isAdmin)';
+  }
+
+  BranchUser copyWith({
+    int? id,
+    String? username,
+    String? password,
+    String? firstName,
+    String? lastName,
+    String? email,
+    bool? isAdmin,
+  }) {
+    return BranchUser(
+      id: id ?? this.id,
+      username: username ?? this.username,
+      password: password ?? this.password,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      email: email ?? this.email,
+      isAdmin: isAdmin ?? this.isAdmin,
+    );
   }
 }

@@ -13,16 +13,12 @@ class DashBoardController extends GetxController {
 
   late Rx<Widget> currentPageWidget;
 
-  RxString branchName = "".obs;
-
   List<Widget> pages = <Widget>[
     const AllNotes(),
   ];
   @override
   void onInit() {
     currentPageWidget = Rx<Widget>(pages[currentPage.value]);
-    branchName.value = authController.localBranch.value.branchName ?? '';
-
     ever(currentPage, (val) => changePage(toPage: val));
     super.onInit();
   }

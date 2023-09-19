@@ -1,7 +1,11 @@
+import 'package:appsyncing/db/user_table.dart';
 import 'package:appsyncing/models/branch_model.dart';
 import 'package:appsyncing/repository/authentication/authentication_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../app_routing/app_routes.dart';
+import '../../models/user_model.dart';
 
 class LoginController extends GetxController {
   static LoginController get instance => Get.find();
@@ -34,14 +38,22 @@ class LoginController extends GetxController {
     localBranchText.text = localBranch.value.branchName ?? '';
   }
 
-  void localLogin({
-    required String username,
-    required String password,
-  }) async {
-    print('local login');
+  Future<void> localLogin(
+      {required String username, required String password}) async {
+    logginIn.value = true;
+    BranchUser user =
+        await UserTable.authLocalUser(username: username, password: password);
+    if (user.isAdmin ?? false) {
+      authController.user.value = user;
+      logginIn.value = false;
+      Get.offAndToNamed(AppRoutes.dashboard);
+    } else {
+      Get.snackbar("Invalid!", "Wrong Credentials");
+    }
+    logginIn.value = false;
   }
 
-  void onlineLogin(
+  Future<void> onlineLogin(
       {required String username,
       required String password,
       required FetchedOnlineBranch selectedBranch}) async {
@@ -52,9 +64,16 @@ class LoginController extends GetxController {
     if (isUserAuthenticated) {
       bool addSuccess = await addBranch(branch: selectedBranch);
       if (addSuccess) {
-        print("all done succesfully");
+        BranchUser user =
+            await UserTable.create(user: authController.user.value);
         // add that user
-        // Get.offAndToNamed(AppRoutes.dashboard);
+        if (user.id != null) {
+          authController.user.value = user;
+          logginIn.value = false;
+          Get.offAndToNamed(AppRoutes.dashboard);
+        } else {
+          Get.snackbar("Error", "Error Authenticating User");
+        }
       } else {
         // maybe that branch was taken online by another branch that same second
         // reload page to reflect changes
