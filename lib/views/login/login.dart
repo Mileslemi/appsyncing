@@ -154,8 +154,8 @@ class LoginScreen extends StatelessWidget {
                           loginController.onlineLogin(
                               username: loginController.username.text,
                               password: loginController.password.text,
-                              branchId: loginController
-                                  .selectedOnlineBranch.value.id!);
+                              selectedBranch:
+                                  loginController.selectedOnlineBranch.value);
                         }
                       }
                     },

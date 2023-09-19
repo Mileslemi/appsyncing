@@ -3,8 +3,6 @@ import 'package:appsyncing/repository/authentication/authentication_controller.d
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../app_routing/app_routes.dart';
-
 class LoginController extends GetxController {
   static LoginController get instance => Get.find();
 
@@ -41,25 +39,32 @@ class LoginController extends GetxController {
   void onlineLogin(
       {required String username,
       required String password,
-      required int branchId}) async {
+      required FetchedOnlineBranch selectedBranch}) async {
     logginIn.value = true;
     bool isUserAuthenticated = await authController.authenticateUserOnline(
         username: username, password: password);
 
     if (isUserAuthenticated) {
-      //addBranchToLocal(id: branchId);
-      print(authController.user.value);
-      // Get.offAndToNamed(AppRoutes.dashboard);
+      bool addSuccess = await addBranch(branch: selectedBranch);
+      if (addSuccess) {
+        print("all done succesfully");
+        // add that user
+        // Get.offAndToNamed(AppRoutes.dashboard);
+      } else {
+        // maybe that branch was taken online by another branch that same second
+        // reload page to reflect changes
+        Get.snackbar("Error!", "Try Again");
+      }
     } else {
       Get.snackbar("Invalid!", "Wrong Credentials");
     }
     logginIn.value = false;
   }
 
-  void addBranchToLocal({required int id}) async {
-    // should be performed by authenticated user,
-    // so first check user is admin,
-    // if true add branch, if result is 1, add user to table also
-    int result = await authController.addBranchToLocalTable(id: id);
+  Future<bool> addBranch({required FetchedOnlineBranch branch}) async {
+    bool result = await authController.addBranchToLocalTableAndUpdateOnline(
+        branch: branch);
+
+    return result;
   }
 }

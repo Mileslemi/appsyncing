@@ -28,6 +28,16 @@ class BranchTable {
     // if no row we create first.
   }
 
+  static Future<int> delete(int id) async {
+    final db = await AppSyncDatabase.instance.database;
+
+    return await db.delete(
+      branchTable,
+      where: "${BranchFields.id} = ?",
+      whereArgs: [id],
+    );
+  }
+
   static Future<int> branchCount() async {
     final db = await AppSyncDatabase.instance.database;
 

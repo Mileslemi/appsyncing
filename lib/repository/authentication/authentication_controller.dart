@@ -72,6 +72,7 @@ class AuthenticationController extends GetxController {
 
   Future<bool> authenticateUserOnline(
       {required String username, required String password}) async {
+    // checks if user is staff
     bool authenticated = false;
     final response = await NetworkHandler.post(
         url: UrlStrings.authenticateUser(),
@@ -111,19 +112,50 @@ class AuthenticationController extends GetxController {
     return authenticated;
   }
 
-  Future<int> addBranchToLocalTable({required int id}) async {
-    // add first to local table,
+  Future<bool> updateBranchOnline({required int id}) async {
+    final response = await NetworkHandler.post(
+        url: UrlStrings.updateBranch(), body: {"id": "$id"});
+    if (response is Success) {
+      try {
+        Success s = response as Success;
 
-    // confirm added
+        var data = jsonDecode(s.returnValue);
+        return data['successful'];
+      } catch (_) {}
+    }
+    return false;
+  }
+
+  Future<bool> addBranchToLocalTableAndUpdateOnline(
+      {required FetchedOnlineBranch branch}) async {
+    // confirm first that table is empty
     int count = await BranchTable.branchCount();
-    if (count == 1) {
-      // update master
+    if (count < 1) {
+      // add to local table,
 
-      // if it returns 1, then all well,
-      // else delete the branch table row, return unsuccessful
+      LocalBranch addedBranch = await BranchTable.create(LocalBranch(
+          branchName: branch.branchName, createdAt: DateTime.now()));
+      // confirm only that added, and one row only exists
+      int secondcount = await BranchTable.branchCount();
+      if (secondcount == 1) {
+        print("branch added");
+        // update master
+        bool updated = await updateBranchOnline(id: branch.id!);
+        if (updated) {
+          print('updated sucsess');
+          return true;
+        } else {
+          await BranchTable.delete(addedBranch.id!);
+        }
+        // if it returns 1, then all well,
+        // else delete the branch table row, return unsuccessful
+      } else if (secondcount > 1) {
+        //  if more than one, maybe another computer has just added, delete row added
+        await BranchTable.delete(addedBranch.id!);
+      }
     }
 
     // // returns 1 if succesfully updated master and added to Local
-    return 0;
+    return false;
   }
 }
