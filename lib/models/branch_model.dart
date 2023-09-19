@@ -12,12 +12,12 @@ class BranchFields {
   static String createdAt = "createdAt";
 }
 
-class Branch {
+class LocalBranch {
   int? id;
   String? branchName;
   DateTime? createdAt;
 
-  Branch({
+  LocalBranch({
     this.id,
     this.branchName,
     this.createdAt,
@@ -31,8 +31,8 @@ class Branch {
     };
   }
 
-  factory Branch.fromMap(Map<String, dynamic> map) {
-    return Branch(
+  factory LocalBranch.fromMap(Map<String, dynamic> map) {
+    return LocalBranch(
       id: map['_id'] != null ? map['_id'] as int : null,
       branchName:
           map['branchName'] != null ? map['branchName'] as String : null,
@@ -42,19 +42,19 @@ class Branch {
 
   String toJson() => json.encode(toMap());
 
-  factory Branch.fromJson(String source) =>
-      Branch.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory LocalBranch.fromJson(String source) =>
+      LocalBranch.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() =>
       'Branch(id: $id, branchName: $branchName, createdAt: $createdAt)';
 
-  Branch copyWith({
+  LocalBranch copyWith({
     int? id,
     String? branchName,
     DateTime? createdAt,
   }) {
-    return Branch(
+    return LocalBranch(
       id: id ?? this.id,
       branchName: branchName ?? this.branchName,
       createdAt: createdAt ?? this.createdAt,
@@ -63,11 +63,11 @@ class Branch {
 }
 
 // for fetching branches online for first setup, the dropdown option when logging in.
-class MasterBranch {
+class FetchedOnlineBranch {
   int? id;
   String? branchName;
   bool? assigned;
-  MasterBranch({
+  FetchedOnlineBranch({
     this.id,
     this.branchName,
     this.assigned,
@@ -81,8 +81,8 @@ class MasterBranch {
     };
   }
 
-  factory MasterBranch.fromMap(Map<String, dynamic> map) {
-    return MasterBranch(
+  factory FetchedOnlineBranch.fromMap(Map<String, dynamic> map) {
+    return FetchedOnlineBranch(
       id: map['id'] != null ? map['id'] as int : null,
       branchName:
           map['branchname'] != null ? map['branchname'] as String : null,
@@ -92,6 +92,6 @@ class MasterBranch {
 
   String toJson() => json.encode(toMap());
 
-  factory MasterBranch.fromJson(String source) =>
-      MasterBranch.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory FetchedOnlineBranch.fromJson(String source) =>
+      FetchedOnlineBranch.fromMap(json.decode(source) as Map<String, dynamic>);
 }

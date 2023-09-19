@@ -7,7 +7,7 @@ class BranchTable {
 
   // CRUD Functions
 
-  static Future<Branch> create(Branch branch) async {
+  static Future<LocalBranch> create(LocalBranch branch) async {
     // the branch param should have branchName and createdAt DateTime.
     final db = await AppSyncDatabase.instance.database;
 
@@ -16,7 +16,7 @@ class BranchTable {
     return branch.copyWith(id: id);
   }
 
-  static Future<List<Branch>> read() async {
+  static Future<List<LocalBranch>> read() async {
     // since we're storing only one row in this table, we'll get that row
     // this one row we'll set at login page
     final db = await AppSyncDatabase.instance.database;
@@ -24,7 +24,7 @@ class BranchTable {
     List branches = await db.query(branchTable);
     // make sure this list has one branch, although we're fetching all rows,
     // if more than one row, error, contact support, don't log in
-    return branches.map((e) => Branch.fromMap(e)).toList();
+    return branches.map((e) => LocalBranch.fromMap(e)).toList();
     // if no row we create first.
   }
 

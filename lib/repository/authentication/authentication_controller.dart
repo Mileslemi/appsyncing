@@ -12,14 +12,13 @@ import '../../models/user_model.dart';
 class AuthenticationController extends GetxController {
   static AuthenticationController get instance => Get.find();
 
-  RxList<MasterBranch> masterBranches = RxList([]);
+  RxList<FetchedOnlineBranch> fetchedOnlineBranches = RxList([]);
 
-  Rx<Branch> branch = Rx(Branch());
-  late Rx<BranchUser> user;
+  Rx<LocalBranch> localBranch = Rx(LocalBranch());
+  Rx<BranchUser> user = Rx(BranchUser());
 
   @override
   void onInit() {
-    user = Rx(BranchUser(username: "mileslemi", password: "1234"));
     countLocalBranches();
     super.onInit();
   }
@@ -42,10 +41,10 @@ class AuthenticationController extends GetxController {
   }
 
   Future<void> fetchLocalBranch() async {
-    List<Branch> localBranches = await BranchTable.read();
+    List<LocalBranch> localBranches = await BranchTable.read();
 
     if (localBranches.isNotEmpty) {
-      branch.value = localBranches[0];
+      localBranch.value = localBranches[0];
     }
   }
 
@@ -58,9 +57,9 @@ class AuthenticationController extends GetxController {
       try {
         List collection = jsonDecode(s.returnValue);
 
-        List<MasterBranch> fetched =
-            collection.map((e) => MasterBranch.fromMap(e)).toList();
-        masterBranches.value = fetched;
+        List<FetchedOnlineBranch> fetched =
+            collection.map((e) => FetchedOnlineBranch.fromMap(e)).toList();
+        fetchedOnlineBranches.value = fetched;
       } catch (e) {
         Get.log("Error Fetching: $e");
         Get.snackbar("Error", "Error. Try Again Later.");
@@ -69,5 +68,62 @@ class AuthenticationController extends GetxController {
       Get.log("Error Fetching: $result");
       Get.snackbar("Error", "$result");
     }
+  }
+
+  Future<bool> authenticateUserOnline(
+      {required String username, required String password}) async {
+    bool authenticated = false;
+    final response = await NetworkHandler.post(
+        url: UrlStrings.authenticateUser(),
+        body: {"username": username, "password": password});
+
+    if (response is Success) {
+      try {
+        Success s = response as Success;
+        var data = jsonDecode(s.returnValue);
+        print(data);
+        //retuned as  { "authenticated": true,  "user": { "first_name": "Miles", "last_name": "Lemi", "email": "mileslemi@gmail.com" } }
+        //  or { "authenticated": false}
+        authenticated = data['authenticated'];
+
+        if (authenticated) {
+          print("yes, is authernticated");
+          // set user to add to local table if all goes well adding branch
+          Map fetchedUser = data['user'];
+          user.value = BranchUser(
+              username: username,
+              password: password,
+              firstName: fetchedUser['first_name'],
+              lastName: fetchedUser['last_name'],
+              email: fetchedUser['email'],
+              isAdmin: true);
+        }
+
+        return authenticated;
+      } catch (e) {
+        Get.log("Error Fetching: $e");
+        Get.snackbar("Authentication Error", "Try Again Later.");
+      }
+    } else {
+      Get.log("Error Authenticating: $response");
+      Get.snackbar("Error Authenticating User", "$response");
+    }
+    return authenticated;
+  }
+
+  Future<int> addBranchToLocalTable({required int id}) async {
+    // add first to local table,
+
+    // confirm added
+    int count = await BranchTable.branchCount();
+    if (count == 1) {
+      // update master
+
+      // if it returns 1, then all well,
+      // else delete the branch table row, return unsuccessful
+    }
+
+    // // returns 1 if succesfully updated master and added to Local
+    return 0;
   }
 }

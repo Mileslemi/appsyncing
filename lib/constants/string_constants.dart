@@ -25,4 +25,8 @@ class UrlStrings {
   static String updateBranch() {
     return "$myApiBaseUrl/updateBranch/";
   }
+
+  static String authenticateUser() {
+    return "$myApiBaseUrl/authUser/";
+  }
 }

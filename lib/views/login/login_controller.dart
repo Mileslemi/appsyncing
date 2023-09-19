@@ -10,9 +10,13 @@ class LoginController extends GetxController {
 
   final authController = Get.find<AuthenticationController>();
 
-  RxList<MasterBranch> masterBranches = RxList([]);
+  RxBool logginIn = false.obs;
 
-  Rx<Branch> thisBranch = Rx(Branch());
+  RxList<FetchedOnlineBranch> fetchedOnlineBranches = RxList([]);
+
+  Rx<LocalBranch> localBranch = Rx(LocalBranch());
+
+  Rx<FetchedOnlineBranch> selectedOnlineBranch = Rx(FetchedOnlineBranch());
 
   TextEditingController username = TextEditingController();
   TextEditingController password = TextEditingController();
@@ -21,18 +25,41 @@ class LoginController extends GetxController {
 
   @override
   void onInit() {
-    masterBranches.value = authController.masterBranches;
+    fetchedOnlineBranches.value = authController.fetchedOnlineBranches;
 
-    thisBranch.value = authController.branch.value;
+    localBranch.value = authController.localBranch.value;
     super.onInit();
   }
 
-  void login(String username, String password) {
-    if (username == authController.user.value.username &&
-        password == authController.user.value.password) {
-      Get.offAndToNamed(AppRoutes.dashboard);
+  void localLogin({
+    required String username,
+    required String password,
+  }) async {
+    print('local login');
+  }
+
+  void onlineLogin(
+      {required String username,
+      required String password,
+      required int branchId}) async {
+    logginIn.value = true;
+    bool isUserAuthenticated = await authController.authenticateUserOnline(
+        username: username, password: password);
+
+    if (isUserAuthenticated) {
+      //addBranchToLocal(id: branchId);
+      print(authController.user.value);
+      // Get.offAndToNamed(AppRoutes.dashboard);
     } else {
       Get.snackbar("Invalid!", "Wrong Credentials");
     }
+    logginIn.value = false;
+  }
+
+  void addBranchToLocal({required int id}) async {
+    // should be performed by authenticated user,
+    // so first check user is admin,
+    // if true add branch, if result is 1, add user to table also
+    int result = await authController.addBranchToLocalTable(id: id);
   }
 }

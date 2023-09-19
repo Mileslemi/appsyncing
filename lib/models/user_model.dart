@@ -60,4 +60,9 @@ class BranchUser {
 
   factory BranchUser.fromJson(String source) =>
       BranchUser.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'BranchUser(id: $id, username: $username, password: $password, firstName: $firstName, lastName: $lastName, email: $email, isAdmin: $isAdmin)';
+  }
 }

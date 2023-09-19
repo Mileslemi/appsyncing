@@ -21,7 +21,7 @@ class DashBoardController extends GetxController {
   @override
   void onInit() {
     currentPageWidget = Rx<Widget>(pages[currentPage.value]);
-    branchName.value = authController.branch.value.branchName ?? '';
+    branchName.value = authController.localBranch.value.branchName ?? '';
 
     ever(currentPage, (val) => changePage(toPage: val));
     super.onInit();

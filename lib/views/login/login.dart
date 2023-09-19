@@ -2,9 +2,11 @@
 // which will be autopopulated if branch Table is found in server.
 // then username and password.
 
+import 'package:appsyncing/models/branch_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../common_widgets/loading_widget.dart';
 import '../../constants/sizes.dart';
 import 'login_controller.dart';
 
@@ -19,103 +21,156 @@ class LoginScreen extends StatelessWidget {
 
     return SafeArea(
         child: Scaffold(
-      body: Form(
-        key: formKey,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * .1),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Obx(
-                () => loginController.masterBranches.isNotEmpty
-                    ? DropdownButtonFormField<String>(
-                        items: loginController.masterBranches
-                            .map<DropdownMenuItem<String>>((branch) =>
-                                DropdownMenuItem<String>(
-                                    enabled: !(branch.assigned ??
-                                        true), //defaulted to true if null, to make that branch name unpickable unless assigned is false
-                                    value: branch.branchName,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(branch.branchName!),
-                                        (branch.assigned ?? false)
-                                            ? Text(
-                                                'assigned',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodySmall
-                                                    ?.apply(
-                                                        fontStyle:
-                                                            FontStyle.italic),
-                                              )
-                                            : const SizedBox()
-                                      ],
-                                    )))
-                            .toList(),
-                        hint: const Text('Choose Branch'),
-                        value: loginController.thisBranch.value.branchName,
-                        disabledHint: Text(
-                            loginController.thisBranch.value.branchName ?? ''),
-                        onChanged:
-                            loginController.thisBranch.value.branchName != null
+      body: Stack(
+        children: [
+          Form(
+            key: formKey,
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * .1),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Obx(
+                    () => loginController.fetchedOnlineBranches.isNotEmpty
+                        ? DropdownButtonFormField<FetchedOnlineBranch>(
+                            validator: (value) {
+                              if (loginController
+                                      .localBranch.value.branchName !=
+                                  null) {
+                                return null;
+                              } else {
+                                if (value?.id != null) {
+                                  return null;
+                                }
+                                return "Select Branch";
+                              }
+                            },
+                            items: loginController.fetchedOnlineBranches
+                                .map<DropdownMenuItem<FetchedOnlineBranch>>(
+                                    (branch) => DropdownMenuItem<
+                                            FetchedOnlineBranch>(
+                                        enabled: !(branch.assigned ??
+                                            true), //defaulted to true if null, to make that branch name unpickable unless assigned is false
+                                        value: branch,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(branch.branchName!),
+                                            (branch.assigned ?? false)
+                                                ? Text(
+                                                    'assigned',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodySmall
+                                                        ?.apply(
+                                                            fontStyle: FontStyle
+                                                                .italic),
+                                                  )
+                                                : const SizedBox()
+                                          ],
+                                        )))
+                                .toList(),
+                            hint: const Text('Choose Branch'),
+                            // initializing a value should be one of the list, since we don't want that
+                            // value: loginController.selectedOnlineBranch.value,
+                            disabledHint: Text(
+                                loginController.localBranch.value.branchName ??
+                                    ''),
+                            onChanged: loginController
+                                        .localBranch.value.branchName !=
+                                    null
                                 ? null
                                 : (value) {
                                     // we'll add this value to local table
+                                    loginController.selectedOnlineBranch.value =
+                                        value ?? FetchedOnlineBranch();
                                   },
-                      )
-                    : TextFormField(
-                        controller: loginController.username,
-                        keyboardType: TextInputType.text,
-                        decoration: const InputDecoration(
-                          enabled: false,
-                          labelText: "Branch",
-                          hintText: "Choose Branch",
-                          prefixIcon: Icon(Icons.person),
-                        ),
-                      ),
+                          )
+                        : TextFormField(
+                            controller: loginController.username,
+                            keyboardType: TextInputType.text,
+                            decoration: const InputDecoration(
+                              enabled: false,
+                              labelText: "Branch",
+                              hintText: "Choose Branch",
+                              prefixIcon: Icon(Icons.person),
+                            ),
+                          ),
+                  ),
+                  const SizedBox(
+                    height: defaultSpacing,
+                  ),
+                  TextFormField(
+                    controller: loginController.username,
+                    validator: (value) {
+                      if ((value ?? '').isEmpty) {
+                        return "Enter Username";
+                      } else {
+                        return null;
+                      }
+                    },
+                    keyboardType: TextInputType.text,
+                    decoration: const InputDecoration(
+                      labelText: "Username",
+                      hintText: "Username",
+                      prefixIcon: Icon(Icons.person),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: defaultSpacing,
+                  ),
+                  TextFormField(
+                    controller: loginController.password,
+                    obscureText: true,
+                    validator: (value) {
+                      if ((value ?? '').isEmpty) {
+                        return "Enter Password";
+                      } else {
+                        return null;
+                      }
+                    },
+                    decoration: const InputDecoration(
+                      labelText: "Password",
+                      hintText: "Password",
+                      prefixIcon: Icon(Icons.password),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: defaultSpacing,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (formKey.currentState!.validate()) {
+                        if (loginController.localBranch.value.branchName !=
+                            null) {
+                          // branch was previaously added to local table, local login
+                          loginController.localLogin(
+                            username: loginController.username.text,
+                            password: loginController.password.text,
+                          );
+                        } else {
+                          loginController.onlineLogin(
+                              username: loginController.username.text,
+                              password: loginController.password.text,
+                              branchId: loginController
+                                  .selectedOnlineBranch.value.id!);
+                        }
+                      }
+                    },
+                    child: const Text("LOGIN"),
+                  )
+                ],
               ),
-              const SizedBox(
-                height: defaultSpacing,
-              ),
-              TextFormField(
-                controller: loginController.username,
-                keyboardType: TextInputType.text,
-                decoration: const InputDecoration(
-                  labelText: "Username",
-                  hintText: "Username",
-                  prefixIcon: Icon(Icons.person),
-                ),
-              ),
-              const SizedBox(
-                height: defaultSpacing,
-              ),
-              TextFormField(
-                controller: loginController.password,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: "Password",
-                  hintText: "Password",
-                  prefixIcon: Icon(Icons.password),
-                ),
-              ),
-              const SizedBox(
-                height: defaultSpacing,
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  if (formKey.currentState!.validate()) {
-                    loginController.login(loginController.username.text,
-                        loginController.password.text);
-                  }
-                },
-                child: const Text("LOGIN"),
-              )
-            ],
+            ),
           ),
-        ),
+          Obx(
+            () => loginController.logginIn.value
+                ? const LoadingWidget()
+                : const SizedBox(),
+          ),
+        ],
       ),
     ));
   }
