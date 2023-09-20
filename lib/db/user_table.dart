@@ -33,4 +33,14 @@ class UserTable {
     }
     return user;
   }
+
+  static Future<int> delete(int id) async {
+    final db = await AppSyncDatabase.instance.database;
+
+    return await db.delete(
+      usertable,
+      where: "${BranchUserFields.id} = ?",
+      whereArgs: [id],
+    );
+  }
 }

@@ -140,6 +140,7 @@ class AuthenticationController extends GetxController {
         // update master
         bool updated = await updateBranchOnline(id: branch.id!);
         if (updated) {
+          await fetchLocalBranch();
           return true;
         } else {
           await BranchTable.delete(addedBranch.id!);

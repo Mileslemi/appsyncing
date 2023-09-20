@@ -2,6 +2,8 @@
 // which will be autopopulated if branch Table is found in server.
 // then username and password.
 
+import 'package:appsyncing/db/branch_table.dart';
+import 'package:appsyncing/db/user_table.dart';
 import 'package:appsyncing/models/branch_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -142,10 +144,12 @@ class LoginScreen extends StatelessWidget {
                   ),
                   ElevatedButton(
                     onPressed: () {
+                      // BranchTable.delete(2);
+                      // UserTable.delete(2);
                       if (formKey.currentState!.validate()) {
                         if (loginController.localBranch.value.branchName !=
                             null) {
-                          // branch was previaously added to local table, local login
+                          // branch was previously added to local table, local login
                           loginController.login(
                             username: loginController.username.text,
                             password: loginController.password.text,

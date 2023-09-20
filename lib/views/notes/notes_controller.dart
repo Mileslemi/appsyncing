@@ -31,6 +31,7 @@ class NotesController extends GetxController {
     fetchConflictNotes();
 
     ever(syncing, (callback) => fetchLastSyncTime());
+    ever(authCtrl.localBranch, (callback) => updatesNotesList());
     super.onInit();
   }
 
@@ -95,7 +96,7 @@ class NotesController extends GetxController {
 
     try {
       localNotes.value = await NoteTable.getLocalyMadeNotes(
-          branchName: authCtrl.localBranch.value.branchName!);
+          branchName: authCtrl.localBranch.value.branchName ?? '');
 
       update();
     } on Exception catch (e) {
