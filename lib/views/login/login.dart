@@ -146,12 +146,12 @@ class LoginScreen extends StatelessWidget {
                         if (loginController.localBranch.value.branchName !=
                             null) {
                           // branch was previaously added to local table, local login
-                          loginController.localLogin(
+                          loginController.login(
                             username: loginController.username.text,
                             password: loginController.password.text,
                           );
                         } else {
-                          loginController.onlineLogin(
+                          loginController.onlineFirstSetup(
                               username: loginController.username.text,
                               password: loginController.password.text,
                               selectedBranch:

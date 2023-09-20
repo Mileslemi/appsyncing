@@ -28,7 +28,7 @@ class DashBoard extends StatelessWidget {
           () => dashboardCtrl.pages.elementAt(dashboardCtrl.currentPage.value)),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
-        onPressed: () => Get.off(
+        onPressed: () => Get.to(
           () => AddEditeNote(title: "Add Note"),
           //arguments: {"": ""},
         ),

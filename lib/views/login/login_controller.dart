@@ -38,22 +38,43 @@ class LoginController extends GetxController {
     localBranchText.text = localBranch.value.branchName ?? '';
   }
 
-  Future<void> localLogin(
+  Future<void> login(
       {required String username, required String password}) async {
     logginIn.value = true;
     BranchUser user =
         await UserTable.authLocalUser(username: username, password: password);
-    if (user.isAdmin ?? false) {
-      authController.user.value = user;
-      logginIn.value = false;
-      Get.offAndToNamed(AppRoutes.dashboard);
+    if (user.username == null) {
+      // user not in local table, try authorizing online
+      bool isUserAuthenticated = await authController.authenticateUserOnline(
+          username: username, password: password);
+
+      if (isUserAuthenticated) {
+        BranchUser user =
+            await UserTable.create(user: authController.user.value);
+        // add that user
+        if (user.id != null) {
+          authController.user.value = user;
+          logginIn.value = false;
+          Get.offAndToNamed(AppRoutes.dashboard);
+        } else {
+          Get.snackbar("Error", "Error Authenticating User");
+        }
+      } else {
+        Get.snackbar("Invalid!", "Wrong Credentials");
+      }
     } else {
-      Get.snackbar("Invalid!", "Wrong Credentials");
+      if (user.isAdmin ?? false) {
+        authController.user.value = user;
+        logginIn.value = false;
+        Get.offAndToNamed(AppRoutes.dashboard);
+      } else {
+        Get.snackbar("Invalid!", "Wrong Credentials");
+      }
     }
     logginIn.value = false;
   }
 
-  Future<void> onlineLogin(
+  Future<void> onlineFirstSetup(
       {required String username,
       required String password,
       required FetchedOnlineBranch selectedBranch}) async {

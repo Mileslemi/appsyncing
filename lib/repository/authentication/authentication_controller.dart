@@ -105,8 +105,8 @@ class AuthenticationController extends GetxController {
         Get.snackbar("Authentication Error", "Try Again Later.");
       }
     } else {
-      Get.log("Error Authenticating: $response");
-      Get.snackbar("Error Authenticating User", "$response");
+      Get.log("Network Failure Authenticating User Online: $response");
+      Get.snackbar("Network Failure", "$response");
     }
     return authenticated;
   }
