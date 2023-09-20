@@ -28,7 +28,8 @@ class AllNotes extends StatelessWidget {
             () => Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text("Welcome, ${authCtrl.user.value.email}"),
+                Text(
+                    "Welcome, ${authCtrl.user.value.firstName} ${authCtrl.user.value.lastName}"),
                 Text(
                   "Last Sync: ${allNotesCtrl.lastSync}",
                 ),
