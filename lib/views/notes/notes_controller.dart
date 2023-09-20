@@ -1,5 +1,6 @@
 import 'package:appsyncing/models/note_model.dart';
 import 'package:appsyncing/repository/authentication/authentication_controller.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 import '../../db/note_table.dart';
@@ -8,6 +9,9 @@ class NotesController extends GetxController {
   static NotesController get instance => Get.find();
 
   final authCtrl = Get.find<AuthenticationController>();
+
+  TextEditingController titleText = TextEditingController();
+  TextEditingController descText = TextEditingController();
 
   RxList<NoteModel> allNotes = RxList([]);
 
@@ -28,6 +32,38 @@ class NotesController extends GetxController {
 
     ever(syncing, (callback) => fetchLastSyncTime());
     super.onInit();
+  }
+
+  void addNote({required String title, required String desc}) async {
+    DateTime now = DateTime.now();
+
+    int? nextCount = await NoteTable.nextTrackingNum(
+        branchName: authCtrl.localBranch.value.branchName!);
+
+    if (nextCount != null) {
+      String trackingId =
+          "${authCtrl.localBranch.value.branchName}$noteTableName${nextCount + 1}"
+              .toUpperCase();
+      NoteModel note = NoteModel(
+        trackingId: trackingId,
+        title: title,
+        description: desc,
+        user: authCtrl.user.value.username,
+        branchName: authCtrl.localBranch.value.branchName,
+        posted: now,
+        lastModified: now,
+      );
+
+      await NoteTable.create(note);
+      updatesNotesList();
+      Get.back();
+    }
+  }
+
+  void updatesNotesList() {
+    fetchAllNotes();
+    fetchAllOnlyLocalMadeNotes();
+    fetchConflictNotes();
   }
 
   Future<void> fetchAllNotes() async {

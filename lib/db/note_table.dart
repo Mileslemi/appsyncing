@@ -1,4 +1,5 @@
 import 'package:appsyncing/models/note_model.dart';
+import 'package:sqflite/sqflite.dart';
 
 import 'appsync_db.dart';
 
@@ -11,6 +12,17 @@ class NoteTable {
     final id = await db.insert(noteTableName, note.toMap());
 
     return note.copyWith(id: id);
+  }
+
+  static Future<int?> nextTrackingNum({required String branchName}) async {
+    final db = await AppSyncDatabase.instance.database;
+
+    var count = await db.rawQuery('SELECT COUNT(*) FROM $noteTableName');
+    //  returns [{COUNT(*): 0}]
+
+    int? noteCount = Sqflite.firstIntValue(count);
+
+    return noteCount;
   }
 
   static Future<List<NoteModel>> getAllNotes() async {

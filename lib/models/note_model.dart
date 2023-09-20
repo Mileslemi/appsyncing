@@ -60,38 +60,38 @@ class NoteModel {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       '_id': id,
-      'tracking_id': trackingId,
-      'master_id': masterId,
+      'trackingId': trackingId,
+      'masterId': masterId,
       'title': title,
       'description': description,
       'user': user,
-      'branch_name': branchName,
+      'branchName': branchName,
       'posted': posted?.toIso8601String(),
-      'last_modified': lastModified?.toIso8601String(),
+      'lastModified': lastModified?.toIso8601String(),
       'synced': (synced ?? false) ? 1 : 0,
-      'merge_conflict': (mergeConflict ?? false) ? 1 : 0,
+      'mergeConflict': (mergeConflict ?? false) ? 1 : 0,
     };
   }
 
   factory NoteModel.fromMap(Map<String, dynamic> map) {
     return NoteModel(
       trackingId:
-          map['tracking_id'] != null ? map['tracking_id'] as String : null,
-      masterId: map['master_id'] != null ? map['master_id'] as int : null,
+          map['trackingId'] != null ? map['trackingId'] as String : null,
+      masterId: map['masterId'] != null ? map['masterId'] as int : null,
       title: map['title'] != null ? map['title'] as String : null,
       description:
           map['description'] != null ? map['description'] as String : null,
       user: map['user'] != null ? map['user'] as String : null,
       branchName:
-          map['branch_name'] != null ? map['branch_name'] as String : null,
+          map['branchName'] != null ? map['branchName'] as String : null,
       posted: map['posted'] != null
           ? DateTime.parse((map['posted'] ?? '') as String)
           : null,
-      lastModified: map['last_modified'] != null
-          ? DateTime.parse((map['last_modified'] ?? '') as String)
+      lastModified: map['lastModified'] != null
+          ? DateTime.parse((map['lastModified'] ?? '') as String)
           : null,
       synced: map['synced'] == 1,
-      mergeConflict: map['merge_conflict'] == 1,
+      mergeConflict: map['mergeConflict'] == 1,
     );
   }
 

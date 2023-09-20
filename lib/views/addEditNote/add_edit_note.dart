@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:appsyncing/models/note_model.dart';
+import 'package:appsyncing/views/notes/notes_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../common_widgets/note_extra_info.dart';
 import '../../constants/sizes.dart';
@@ -17,6 +19,11 @@ class AddEditeNote extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final notesCtrl = Get.find<NotesController>();
+    if (note != null) {
+      notesCtrl.titleText.text = note?.title ?? '';
+      notesCtrl.descText.text = note?.description ?? '';
+    }
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -63,6 +70,7 @@ class AddEditeNote extends StatelessWidget {
                           ],
                         ),
                   TextFormField(
+                    controller: notesCtrl.titleText,
                     keyboardType: TextInputType.text,
                     decoration: const InputDecoration(
                       labelText: "Title",
@@ -75,6 +83,7 @@ class AddEditeNote extends StatelessWidget {
                   ),
                   TextFormField(
                     keyboardType: TextInputType.text,
+                    controller: notesCtrl.descText,
                     minLines: 4,
                     maxLines: 5,
                     decoration: const InputDecoration(
@@ -89,7 +98,11 @@ class AddEditeNote extends StatelessWidget {
                   note == null
                       ? ElevatedButton(
                           onPressed: () {
-                            if (formKey.currentState!.validate()) {}
+                            if (formKey.currentState!.validate()) {
+                              notesCtrl.addNote(
+                                  title: notesCtrl.titleText.text,
+                                  desc: notesCtrl.descText.text);
+                            }
                           },
                           child: const Text("ADD"),
                         )
