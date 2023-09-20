@@ -2,7 +2,7 @@ import 'package:appsyncing/repository/authentication/authentication_controller.d
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../allnotes/allnotes.dart';
+import '../notes/allnotes.dart';
 
 class DashBoardController extends GetxController {
   static DashBoardController get instance => Get.find();

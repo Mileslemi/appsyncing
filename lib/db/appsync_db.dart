@@ -52,7 +52,7 @@ class AppSyncDatabase {
 
 //  note table
     await db.execute('''
-CREATE TABLE $noteTable(
+CREATE TABLE $noteTableName(
   ${NoteFields.id} $idType,
   ${NoteFields.trackingId} $textType UNIQUE,
   ${NoteFields.masterId} $intType,

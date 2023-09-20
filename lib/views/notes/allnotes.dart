@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:appsyncing/common_widgets/loading_widget.dart';
 import 'package:appsyncing/common_widgets/note_display.dart';
 import 'package:appsyncing/repository/authentication/authentication_controller.dart';
-import 'package:appsyncing/views/allnotes/allnotes_controller.dart';
+import 'package:appsyncing/views/notes/notes_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -16,7 +16,7 @@ class AllNotes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final allNotesCtrl = Get.find<AllNotesController>();
+    final allNotesCtrl = Get.find<NotesController>();
     final authCtrl = Get.find<AuthenticationController>();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -40,13 +40,13 @@ class AllNotes extends StatelessWidget {
             height: defaultSpacing,
           ),
           Expanded(
-            child: GetBuilder<AllNotesController>(builder: (controller) {
+            child: GetBuilder<NotesController>(builder: (controller) {
               return Stack(
                 children: [
-                  controller.allLocalNotes.isNotEmpty
+                  controller.allNotes.isNotEmpty
                       ? (Platform.isIOS || Platform.isAndroid)
-                          ? buildNotes(controller.allLocalNotes)
-                          : buildNotesDeskTop(controller.allLocalNotes)
+                          ? buildNotes(controller.allNotes)
+                          : buildNotesDeskTop(controller.allNotes)
                       : const Center(
                           child: Text("No Notes...."),
                         ),

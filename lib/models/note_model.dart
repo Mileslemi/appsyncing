@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-const String noteTable = "note";
+const String noteTableName = "note";
 
 class NoteFields {
   static final List<String> fetchValues = [
@@ -101,6 +101,7 @@ class NoteModel {
       NoteModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   NoteModel copyWith({
+    int? id,
     String? trackingId,
     int? masterId,
     String? title,
@@ -113,6 +114,7 @@ class NoteModel {
     bool? mergeConflict,
   }) {
     return NoteModel(
+      id: id ?? this.id,
       trackingId: trackingId ?? this.trackingId,
       masterId: masterId ?? this.masterId,
       title: title ?? this.title,
