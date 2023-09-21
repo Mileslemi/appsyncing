@@ -91,12 +91,14 @@ class AuthenticationController extends GetxController {
           // set user to add to local table if all goes well adding branch
           Map fetchedUser = data['user'];
           user.value = BranchUser(
-              username: username,
-              password: password,
-              firstName: fetchedUser['first_name'],
-              lastName: fetchedUser['last_name'],
-              email: fetchedUser['email'],
-              isAdmin: true);
+            username: username,
+            password: password,
+            firstName: fetchedUser['first_name'],
+            lastName: fetchedUser['last_name'],
+            email: fetchedUser['email'],
+            isAdmin: true,
+            joined: DateTime.now(),
+          );
         }
 
         return authenticated;
