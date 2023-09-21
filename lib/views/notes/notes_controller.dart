@@ -61,6 +61,21 @@ class NotesController extends GetxController {
     }
   }
 
+  void updateNote(
+      {required NoteModel note,
+      required String title,
+      required String desc}) async {
+    DateTime now = DateTime.now();
+
+    NoteModel updateNote =
+        note.copyWith(title: title, description: desc, lastModified: now);
+
+    await NoteTable.update(updateNote);
+
+    updatesNotesList();
+    Get.back();
+  }
+
   void updatesNotesList() {
     fetchAllNotes();
     fetchAllOnlyLocalMadeNotes();

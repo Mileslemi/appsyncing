@@ -75,6 +75,29 @@ class NoteModel {
 
   factory NoteModel.fromMap(Map<String, dynamic> map) {
     return NoteModel(
+      id: map['_id'] != null ? map['_id'] as int : null,
+      trackingId:
+          map['trackingId'] != null ? map['trackingId'] as String : null,
+      masterId: map['masterId'] != null ? map['masterId'] as int : null,
+      title: map['title'] != null ? map['title'] as String : null,
+      description:
+          map['description'] != null ? map['description'] as String : null,
+      user: map['user'] != null ? map['user'] as String : null,
+      branchName:
+          map['branchName'] != null ? map['branchName'] as String : null,
+      posted: map['posted'] != null
+          ? DateTime.parse((map['posted'] ?? '') as String)
+          : null,
+      lastModified: map['lastModified'] != null
+          ? DateTime.parse((map['lastModified'] ?? '') as String)
+          : null,
+      synced: map['synced'] == 1,
+      mergeConflict: map['mergeConflict'] == 1,
+    );
+  }
+
+  factory NoteModel.fromOnlineMap(Map<String, dynamic> map) {
+    return NoteModel(
       trackingId:
           map['trackingId'] != null ? map['trackingId'] as String : null,
       masterId: map['masterId'] != null ? map['masterId'] as int : null,
@@ -97,8 +120,13 @@ class NoteModel {
 
   String toJson() => json.encode(toMap());
 
+  String toOnlineJson() => json.encode(toMap());
+
   factory NoteModel.fromJson(String source) =>
       NoteModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  factory NoteModel.fromOnlineJson(String source) =>
+      NoteModel.fromOnlineMap(json.decode(source) as Map<String, dynamic>);
 
   NoteModel copyWith({
     int? id,
@@ -126,5 +154,10 @@ class NoteModel {
       synced: synced ?? this.synced,
       mergeConflict: mergeConflict ?? this.mergeConflict,
     );
+  }
+
+  @override
+  String toString() {
+    return 'NoteModel(id: $id, trackingId: $trackingId, masterId: $masterId, title: $title, description: $description, user: $user, branchName: $branchName, posted: $posted, lastModified: $lastModified, synced: $synced, mergeConflict: $mergeConflict)';
   }
 }

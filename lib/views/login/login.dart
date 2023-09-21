@@ -2,8 +2,6 @@
 // which will be autopopulated if branch Table is found in server.
 // then username and password.
 
-import 'package:appsyncing/db/branch_table.dart';
-import 'package:appsyncing/db/user_table.dart';
 import 'package:appsyncing/models/branch_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

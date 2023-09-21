@@ -111,9 +111,8 @@ class AddEditeNote extends StatelessWidget {
                             Expanded(
                               child: ElevatedButton(
                                 onPressed: () {
-                                  if (formKey.currentState!.validate()) {
-                                    // only perfomed online.
-                                  }
+                                  Get.snackbar("Invalid",
+                                      "This action can only be done online");
                                 },
                                 child: const Text("DELETE"),
                               ),
@@ -124,7 +123,14 @@ class AddEditeNote extends StatelessWidget {
                             Expanded(
                               child: ElevatedButton(
                                 onPressed: () {
-                                  if (formKey.currentState!.validate()) {}
+                                  if (formKey.currentState!.validate()) {
+                                    if (note?.id != null) {
+                                      notesCtrl.updateNote(
+                                          note: note!,
+                                          title: notesCtrl.titleText.text,
+                                          desc: notesCtrl.descText.text);
+                                    }
+                                  }
                                 },
                                 child: const Text("UPDATE"),
                               ),
