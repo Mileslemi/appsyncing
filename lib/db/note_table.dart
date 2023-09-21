@@ -1,4 +1,5 @@
 import 'package:appsyncing/models/note_model.dart';
+import 'package:get/get.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'appsync_db.dart';
@@ -6,13 +7,19 @@ import 'appsync_db.dart';
 class NoteTable {
   NoteTable._();
 
-  static Future<NoteModel> create(NoteModel note) async {
+  static Future<NoteModel?> create(NoteModel note) async {
     final db = await AppSyncDatabase.instance.database;
 
-    final id = await db.insert(noteTableName, note.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.fail);
+    try {
+      // incase trackingId already exists
+      final id = await db.insert(noteTableName, note.toMap(),
+          conflictAlgorithm: ConflictAlgorithm.fail);
 
-    return note.copyWith(id: id);
+      return note.copyWith(id: id);
+    } on Exception catch (_) {
+      Get.snackbar("Conflict Error", "${note.trackingId} Already Exists");
+    }
+    return null;
   }
 
   static Future<int?> nextTrackingNum({required String branchName}) async {

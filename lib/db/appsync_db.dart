@@ -19,6 +19,7 @@ class AppSyncDatabase {
 
   static String idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
   static String intType = "INTEGER";
+  // found a better way of setting unique to a table structure, check tables below - tested and works
   // static String uniqueintType = "INTEGER UNIQUE";
   static String textType = "TEXT NOT NULL";
   static String boolType = "BOOLEAN NOT NULL";
@@ -31,11 +32,11 @@ class AppSyncDatabase {
       return _database!;
     }
 
-    String dbName = "appsync.db";
+    String dbName = "appsynctryv3.db";
 
     // on upgrade change the version
 
-    _database = await _initializeDB(dbName: dbName, version: 3);
+    _database = await _initializeDB(dbName: dbName, version: 1);
 
     return _database!;
   }
@@ -77,6 +78,7 @@ class AppSyncDatabase {
             }
             if (oldVersion == 2) {
               // this update was to add unique constraint index to sync and note table
+              // tested this way of constraining a column to only contain unique values, it works
               _updateSyncTablev2tov3(batch);
               _updateNoteTablev2tov3(batch);
             }
@@ -94,8 +96,7 @@ class AppSyncDatabase {
   }
 
   void _updateNoteTablev2tov3(Batch batch) {
-    // "ALTER TABLE $syncTableName ADD 'CONSTRAINT' ${SyncFields.constraint} 'UNIQUE'('${SyncFields.tableName}')"
-    // CREATE UNIQUE INDEX ${SyncFields.constraintIndex} ON $syncTableName(${SyncFields.tableName})
+    // CREATE UNIQUE INDEX index_name ON table(col1_1,col_2)
     batch.execute(
         "CREATE UNIQUE INDEX ${NoteFields.noteConstraintIndex} ON $noteTableName(${NoteFields.trackingId})");
   }

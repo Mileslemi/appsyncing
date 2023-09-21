@@ -1,17 +1,24 @@
 import 'package:appsyncing/db/appsync_db.dart';
 import 'package:appsyncing/models/sync_model.dart';
+import 'package:get/get.dart';
 import 'package:sqflite_common/sql.dart';
 
 class SyncTable {
   SyncTable._();
 
-  static Future<SyncModel> create(SyncModel newSync) async {
+  static Future<SyncModel?> create(SyncModel newSync) async {
     final db = await AppSyncDatabase.instance.database;
 
-    int id = await db.insert(syncTableName, newSync.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.fail);
+    try {
+      // incase of unique constraint exception, a row with that _unique already exists
+      int id = await db.insert(syncTableName, newSync.toMap(),
+          conflictAlgorithm: ConflictAlgorithm.fail);
 
-    return newSync.copyWith(id: id);
+      return newSync.copyWith(id: id);
+    } on Exception catch (_) {
+      Get.snackbar("Conflict Error", "Contact Support.");
+    }
+    return null;
   }
 
   static Future<SyncModel> read(String tableName) async {
@@ -38,5 +45,15 @@ class SyncTable {
         where: "${SyncFields.id} = ?", whereArgs: [sync.id]);
 
     return changescount;
+  }
+
+  static Future<int> delete(int id) async {
+    final db = await AppSyncDatabase.instance.database;
+
+    return db.delete(
+      syncTableName,
+      where: "${SyncFields.id} = ?",
+      whereArgs: [id],
+    );
   }
 }
