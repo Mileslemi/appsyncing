@@ -9,7 +9,8 @@ class NoteTable {
   static Future<NoteModel> create(NoteModel note) async {
     final db = await AppSyncDatabase.instance.database;
 
-    final id = await db.insert(noteTableName, note.toMap());
+    final id = await db.insert(noteTableName, note.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.fail);
 
     return note.copyWith(id: id);
   }

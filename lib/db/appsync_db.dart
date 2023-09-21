@@ -19,9 +19,10 @@ class AppSyncDatabase {
 
   static String idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
   static String intType = "INTEGER";
-  static String uniqueintType = "INTEGER UNIQUE";
+  // static String uniqueintType = "INTEGER UNIQUE";
   static String textType = "TEXT NOT NULL";
   static String boolType = "BOOLEAN NOT NULL";
+  // static String uniqueTextType = "TEXT NOT NULL UNIQUE";
 
   AppSyncDatabase._init();
 
@@ -34,7 +35,7 @@ class AppSyncDatabase {
 
     // on upgrade change the version
 
-    _database = await _initializeDB(dbName: dbName, version: 2);
+    _database = await _initializeDB(dbName: dbName, version: 3);
 
     return _database!;
   }
@@ -52,15 +53,15 @@ class AppSyncDatabase {
           onCreate: (db, version) async {
             // called when the db does not exist in that platform
             Batch batch = db.batch();
-            _createNoteTablev2(batch);
+            _createNoteTablev3(batch);
 
-            _createBranchTablev2(batch);
+            _createBranchTablev3(batch);
 
-            _createUserTablev2(batch);
+            _createUserTablev3(batch);
 
-            _createNoteConflictTablev2(batch);
+            _createNoteConflictTablev3(batch);
 
-            _createSyncTablev2(batch);
+            _createSyncTablev3(batch);
 
             await batch.commit();
           },
@@ -69,17 +70,15 @@ class AppSyncDatabase {
             Batch batch = db.batch();
 
             if (oldVersion == 1) {
-              print("here");
               // because the first version db user table had no joined column
-              _updateUserTablev1tov2(batch);
-              // also it had no sync table
-              _createSyncTablev2(batch);
+              _updateUserTablev1tov3(batch);
+              // also we added sync table
+              _createSyncTablev3(batch);
             }
             if (oldVersion == 2) {
-              print("here2");
-              // perform other updates..and so on, and so on..
-              // _updateTablev2tov3(batch)
-              // _createSyncTablev3(batch);
+              // this update was to add unique constraint index to sync and note table
+              _updateSyncTablev2tov3(batch);
+              _updateNoteTablev2tov3(batch);
             }
 
             await batch.commit();
@@ -87,18 +86,33 @@ class AppSyncDatabase {
         ));
   }
 
-  void _createSyncTablev2(Batch batch) {
+  void _updateSyncTablev2tov3(Batch batch) {
+    // "ALTER TABLE $syncTableName ADD 'CONSTRAINT' ${SyncFields.constraint} 'UNIQUE'('${SyncFields.tableName}')"
+    // CREATE UNIQUE INDEX ${SyncFields.constraintIndex} ON $syncTableName(${SyncFields.tableName})
+    batch.execute(
+        "CREATE UNIQUE INDEX ${SyncFields.syncconstraintIndex} ON $syncTableName(${SyncFields.tableName})");
+  }
+
+  void _updateNoteTablev2tov3(Batch batch) {
+    // "ALTER TABLE $syncTableName ADD 'CONSTRAINT' ${SyncFields.constraint} 'UNIQUE'('${SyncFields.tableName}')"
+    // CREATE UNIQUE INDEX ${SyncFields.constraintIndex} ON $syncTableName(${SyncFields.tableName})
+    batch.execute(
+        "CREATE UNIQUE INDEX ${NoteFields.noteConstraintIndex} ON $noteTableName(${NoteFields.trackingId})");
+  }
+
+  void _createSyncTablev3(Batch batch) {
     batch.execute('''
 CREATE TABLE $syncTableName(
       ${SyncFields.id} $idType,
       ${SyncFields.tableName} $textType,
       ${SyncFields.lastSync} $textType,
-      ${SyncFields.rowsEntered} $intType
+      ${SyncFields.rowsEntered} $intType,
+      unique(${SyncFields.tableName})
     )
     ''');
   }
 
-  void _updateUserTablev1tov2(Batch batch) {
+  void _updateUserTablev1tov3(Batch batch) {
     // since it a not null field, we mut supply a default
     String defaultTime = DateTime(2023).toIso8601String();
     // supply extra quotes if text type
@@ -106,7 +120,7 @@ CREATE TABLE $syncTableName(
         "ALTER TABLE $usertable ADD COLUMN ${BranchUserFields.joined} $textType DEFAULT '$defaultTime'");
   }
 
-  void _createNoteConflictTablev2(Batch batch) {
+  void _createNoteConflictTablev3(Batch batch) {
     batch.execute('''
 CREATE TABLE $noteConflictTable(
       ${NoteConflictFields.id} $idType,
@@ -117,7 +131,7 @@ CREATE TABLE $noteConflictTable(
     ''');
   }
 
-  void _createUserTablev2(Batch batch) {
+  void _createUserTablev3(Batch batch) {
     batch.execute('''
 CREATE TABLE $usertable(
       ${BranchUserFields.id} $idType,
@@ -132,7 +146,7 @@ CREATE TABLE $usertable(
     ''');
   }
 
-  void _createBranchTablev2(Batch batch) {
+  void _createBranchTablev3(Batch batch) {
     batch.execute('''
 CREATE TABLE $branchTable(
       ${BranchFields.id} $idType,
@@ -142,12 +156,12 @@ CREATE TABLE $branchTable(
     ''');
   }
 
-  void _createNoteTablev2(Batch batch) {
+  void _createNoteTablev3(Batch batch) {
     batch.execute('''
 CREATE TABLE $noteTableName(
       ${NoteFields.id} $idType,
-      ${NoteFields.trackingId} $textType UNIQUE,
-      ${NoteFields.masterId} $uniqueintType,
+      ${NoteFields.trackingId} $textType,
+      ${NoteFields.masterId} $intType,
       ${NoteFields.title} $textType,
       ${NoteFields.desc} $textType,
       ${NoteFields.user} $textType,
@@ -155,7 +169,8 @@ CREATE TABLE $noteTableName(
       ${NoteFields.posted} $textType,
       ${NoteFields.lastModified} $textType,
       ${NoteFields.synced} $boolType,
-      ${NoteFields.mergeConflict} $boolType
+      ${NoteFields.mergeConflict} $boolType,
+      unique(${NoteFields.trackingId})
     )
     ''');
   }

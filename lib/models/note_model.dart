@@ -26,6 +26,8 @@ class NoteFields {
   static String lastModified = "lastModified";
   static String synced = "synced";
   static String mergeConflict = "mergeConflict";
+
+  static String noteConstraintIndex = "UC_note";
 }
 
 // ignore_for_file: public_member_api_docs, sort_constructors_first

@@ -7,6 +7,8 @@ class SyncFields {
   static String tableName = "tableName";
   static String lastSync = "lastSync";
   static String rowsEntered = "rowsEntered";
+
+  static String syncconstraintIndex = "UC_sync";
 }
 
 // ignore_for_file: public_member_api_docs, sort_constructors_first
@@ -47,4 +49,18 @@ class SyncModel {
 
   factory SyncModel.fromJson(String source) =>
       SyncModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  SyncModel copyWith({
+    int? id,
+    String? tableName,
+    DateTime? lastSync,
+    int? rowsEntered,
+  }) {
+    return SyncModel(
+      id: id ?? this.id,
+      tableName: tableName ?? this.tableName,
+      lastSync: lastSync ?? this.lastSync,
+      rowsEntered: rowsEntered ?? this.rowsEntered,
+    );
+  }
 }
