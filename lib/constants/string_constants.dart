@@ -31,4 +31,8 @@ class UrlStrings {
   static String authenticateUser() {
     return "$myApiBaseUrl/authUser/";
   }
+
+  static String checkNoteTableChanges() {
+    return "$myApiBaseUrl/checkNoteChanges/";
+  }
 }
