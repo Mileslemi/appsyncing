@@ -99,10 +99,20 @@ class NoteModel {
   }
 
   factory NoteModel.fromOnlineMap(Map<String, dynamic> map) {
+    // {
+//         "id": 3,
+//         "posted": "2023-09-08T08:54:40Z",
+//         "title": "Note To Test",
+//         "description": "This Note was for purpose of testing getting all modified or new Notes since last sync. Modifying Test 2.",
+//         "trackingId": "MAINNOTE3",
+//         "lastModified": "2023-09-08T09:09:18.535124Z",
+//         "user": "mileslemi",
+//         "branchName": "MAIN"
+//     },
     return NoteModel(
       trackingId:
           map['trackingId'] != null ? map['trackingId'] as String : null,
-      masterId: map['masterId'] != null ? map['masterId'] as int : null,
+      masterId: map['id'] != null ? map['id'] as int : null,
       title: map['title'] != null ? map['title'] as String : null,
       description:
           map['description'] != null ? map['description'] as String : null,
@@ -115,8 +125,12 @@ class NoteModel {
       lastModified: map['lastModified'] != null
           ? DateTime.parse((map['lastModified'] ?? '') as String)
           : null,
-      synced: map['synced'] == 1,
-      mergeConflict: map['mergeConflict'] == 1,
+      // these two values are not in the json body, set sync as true since we're pulling
+      // for mergeConflict, check if that trackingId exists in local, if true check if modified[you can assert this by checking if synced is true, because on modifying synced is automaticall set to false]
+      // if synced is false[meaning it has been modified], add title and desc of this online note to conflict table,
+      // otherwise set mergeConflict to false
+      // synced: map['synced'] == 1,
+      // mergeConflict: map['mergeConflict'] == 1,
     );
   }
 

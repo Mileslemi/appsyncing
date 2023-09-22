@@ -9,6 +9,7 @@ import 'package:appsyncing/repository/Network/network_handler.dart';
 import 'package:get/get.dart';
 
 import '../../common_methods/date_functions.dart';
+import '../../common_methods/fetch_online_notes.dart';
 
 class SyncController extends GetxController {
   static SyncController get instance => Get.find();
@@ -28,7 +29,7 @@ class SyncController extends GetxController {
       }
     });
     noteChanges.value =
-        await checkTableChanges(url: UrlStrings.checkNoteTableChanges());
+        await checkTableChanges(url: UrlStrings.checkNoteTableChangesUrl());
     super.onInit();
   }
 
@@ -36,9 +37,16 @@ class SyncController extends GetxController {
     SyncModel noteSync = await SyncTable.read(tableName);
 
     if (noteSync.id != null) {
-      return noteSync.lastSync;
+      return noteSync.lastSync!;
+    } else {
+      //if that table is not found, then it's a new db, initiate it with default SyncModel
+      SyncModel? newSync = await SyncTable.create(SyncModel(
+          rowsEntered: 0, tableName: tableName, lastSync: defaultTime));
+      // added the first time succesfully
+      if (newSync?.id != null) {
+        return newSync?.lastSync;
+      }
     }
-    //if no sync found return null
     return null;
   }
 
@@ -70,10 +78,16 @@ class SyncController extends GetxController {
   }
 
   void pullNotes({required DateTime lastCheck}) async {
-    print("pulling data");
     // on success pull, update last sync time with the time you checkedNoteTbale changes
-
-    // SyncModel noteTableSync = await SyncTable.read(noteTableName);
+    if (lastNoteTableSync.value != null) {
+      // print("pulling data");
+      List<NoteModel> onlineNotes = await SyncFunctions.getOnlineModifiedNotes(
+          lastSync: lastNoteTableSync.value!.toIso8601String());
+      // SyncModel noteTableSync = await SyncTable.read(noteTableName);
+      Get.log("$onlineNotes");
+    } else {
+      Get.snackbar("Sync Failure!", "If error persist, contact support.");
+    }
 
     // await SyncTable.update(noteTableSync.copyWith(lastSync: lastCheck));
   }

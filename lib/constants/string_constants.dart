@@ -24,15 +24,19 @@ class UrlStrings {
     return "$myApiBaseUrl/getBranches/";
   }
 
-  static String updateBranch() {
+  static String updateBranchUrl() {
     return "$myApiBaseUrl/updateBranch/";
   }
 
-  static String authenticateUser() {
+  static String authenticateUserUrl() {
     return "$myApiBaseUrl/authUser/";
   }
 
-  static String checkNoteTableChanges() {
+  static String checkNoteTableChangesUrl() {
     return "$myApiBaseUrl/checkNoteChanges/";
+  }
+
+  static String getOnlineModifiedNotesUrl() {
+    return "$myApiBaseUrl/getModifiedNotes/";
   }
 }

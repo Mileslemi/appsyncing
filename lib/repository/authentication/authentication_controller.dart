@@ -75,7 +75,7 @@ class AuthenticationController extends GetxController {
     // checks if user is staff
     bool authenticated = false;
     final response = await NetworkHandler.post(
-        url: UrlStrings.authenticateUser(),
+        url: UrlStrings.authenticateUserUrl(),
         body: {"username": username, "password": password});
 
     if (response is Success) {
@@ -115,7 +115,7 @@ class AuthenticationController extends GetxController {
 
   Future<bool> updateBranchOnline({required int id}) async {
     final response = await NetworkHandler.post(
-        url: UrlStrings.updateBranch(), body: {"id": "$id"});
+        url: UrlStrings.updateBranchUrl(), body: {"id": "$id"});
     if (response is Success) {
       try {
         Success s = response as Success;
