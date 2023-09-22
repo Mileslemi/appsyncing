@@ -2,10 +2,8 @@
 // which will be autopopulated if branch Table is found in server.
 // then username and password.
 
-import 'package:appsyncing/db/sync_table.dart';
 import 'package:appsyncing/models/branch_model.dart';
-import 'package:appsyncing/models/note_model.dart';
-import 'package:appsyncing/models/sync_model.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -148,29 +146,29 @@ class LoginScreen extends StatelessWidget {
                       // ***table actions for testing***
                       // BranchTable.delete(2);
                       // UserTable.delete(2);
-                      SyncTable.delete(1);
+                      // SyncTable.delete(1);
                       // SyncTable.create(SyncModel(
                       //     lastSync: DateTime.now(),
                       //     rowsEntered: 0,
-                      //     tableName: noteTableName));
+                      //     tableName: "test"));
                       // *****
 
-                      // if (formKey.currentState!.validate()) {
-                      //   if (loginController.localBranch.value.branchName !=
-                      //       null) {
-                      //     // branch was previously added to local table, local login
-                      //     loginController.login(
-                      //       username: loginController.username.text,
-                      //       password: loginController.password.text,
-                      //     );
-                      //   } else {
-                      //     loginController.onlineFirstSetup(
-                      //         username: loginController.username.text,
-                      //         password: loginController.password.text,
-                      //         selectedBranch:
-                      //             loginController.selectedOnlineBranch.value);
-                      //   }
-                      // }
+                      if (formKey.currentState!.validate()) {
+                        if (loginController.localBranch.value.branchName !=
+                            null) {
+                          // branch was previously added to local table, local login
+                          loginController.login(
+                            username: loginController.username.text,
+                            password: loginController.password.text,
+                          );
+                        } else {
+                          loginController.onlineFirstSetup(
+                              username: loginController.username.text,
+                              password: loginController.password.text,
+                              selectedBranch:
+                                  loginController.selectedOnlineBranch.value);
+                        }
+                      }
                     },
                     child: const Text("LOGIN"),
                   )

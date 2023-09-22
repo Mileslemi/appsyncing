@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:appsyncing/constants/string_constants.dart';
 import 'package:appsyncing/models/note_model.dart';
 import 'package:appsyncing/models/sync_model.dart';
 import 'package:sqflite_common/sqflite.dart';
@@ -32,11 +33,15 @@ class AppSyncDatabase {
       return _database!;
     }
 
-    String dbName = "appsynctryv3.db";
+    // you don't need to change db name every time update tables,
+    // if you do you loose all data,
+    // i just did this because I was lazy to delete former db,
+    // and I needed a clean slate to test stuff
+    String dbName = "appsyncv1.db";
 
     // on upgrade change the version
 
-    _database = await _initializeDB(dbName: dbName, version: 1);
+    _database = await _initializeDB(dbName: dbName, version: 3);
 
     return _database!;
   }
@@ -71,14 +76,20 @@ class AppSyncDatabase {
             Batch batch = db.batch();
 
             if (oldVersion == 1) {
+              //make latest version updates, bcuz its going to jump from 1 to latest version
+              // version 1 to 2 updates
               // because the first version db user table had no joined column
               _updateUserTablev1tov3(batch);
               // also we added sync table
               _createSyncTablev3(batch);
+              // version 1 to 3 updates
+              _updateSyncTablev2tov3(batch);
+              _updateNoteTablev2tov3(batch);
             }
             if (oldVersion == 2) {
               // this update was to add unique constraint index to sync and note table
               // tested this way of constraining a column to only contain unique values, it works
+              // version 2 to 3 updates
               _updateSyncTablev2tov3(batch);
               _updateNoteTablev2tov3(batch);
             }
@@ -115,10 +126,10 @@ CREATE TABLE $syncTableName(
 
   void _updateUserTablev1tov3(Batch batch) {
     // since it a not null field, we mut supply a default
-    String defaultTime = DateTime(2023).toIso8601String();
+    String defaultTym = defaultTime.toIso8601String();
     // supply extra quotes if text type
     batch.execute(
-        "ALTER TABLE $usertable ADD COLUMN ${BranchUserFields.joined} $textType DEFAULT '$defaultTime'");
+        "ALTER TABLE $usertable ADD COLUMN ${BranchUserFields.joined} $textType DEFAULT '$defaultTym'");
   }
 
   void _createNoteConflictTablev3(Batch batch) {

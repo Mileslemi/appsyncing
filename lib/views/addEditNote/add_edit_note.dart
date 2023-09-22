@@ -99,7 +99,7 @@ class AddEditeNote extends StatelessWidget {
                       ? ElevatedButton(
                           onPressed: () {
                             if (formKey.currentState!.validate()) {
-                              notesCtrl.addNote(
+                              notesCtrl.addLcalNote(
                                   title: notesCtrl.titleText.text,
                                   desc: notesCtrl.descText.text);
                             }
