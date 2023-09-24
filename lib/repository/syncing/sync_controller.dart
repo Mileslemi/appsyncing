@@ -17,6 +17,8 @@ class SyncController extends GetxController {
   late Rx<DateTime?> lastNoteTableSync;
   RxBool noteChanges = false.obs;
 
+  RxBool syncing = false.obs;
+
   Rx<DateTime> lastNoteTableSyncChecked = Rx(DateTime.now());
 
   @override
@@ -26,6 +28,9 @@ class SyncController extends GetxController {
     ever(noteChanges, (e) {
       if (e) {
         pullNotes(lastCheck: lastNoteTableSyncChecked.value);
+      } else {
+        // if no changes online push local notes that have been modified since last sync
+        pushNotes();
       }
     });
     noteChanges.value =
@@ -71,7 +76,7 @@ class SyncController extends GetxController {
           }
         }
       } catch (_) {
-        // print("Error checking table changes $e");
+        Get.log("Error checking table changes");
       }
     }
     return false;
@@ -79,16 +84,31 @@ class SyncController extends GetxController {
 
   void pullNotes({required DateTime lastCheck}) async {
     // on success pull, update last sync time with the time you checkedNoteTbale changes
+    syncing.value = true;
     if (lastNoteTableSync.value != null) {
       // print("pulling data");
       List<NoteModel> onlineNotes = await SyncFunctions.getOnlineModifiedNotes(
           lastSync: lastNoteTableSync.value!.toIso8601String());
-      // SyncModel noteTableSync = await SyncTable.read(noteTableName);
       Get.log("$onlineNotes");
-    } else {
-      Get.snackbar("Sync Failure!", "If error persist, contact support.");
-    }
+      bool allSuccess =
+          await SyncFunctions.syncOnlineToLocal(onlineNotes: onlineNotes);
 
-    // await SyncTable.update(noteTableSync.copyWith(lastSync: lastCheck));
+      if (allSuccess) {
+        // after sucessfully adding all, update last sync to lastCheck
+        SyncModel noteTableSync = await SyncTable.read(noteTableName);
+        await SyncTable.update(noteTableSync.copyWith(lastSync: lastCheck));
+      }
+
+      // push local note to online, ones without merge conflict
+    } else {
+      Get.log("Sync Failure! lastNoteTableSync value is null.");
+    }
+    syncing.value = false;
+  }
+
+  void pushNotes() async {
+    syncing.value = true;
+
+    syncing.value = false;
   }
 }

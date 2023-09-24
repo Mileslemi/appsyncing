@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:appsyncing/constants/string_constants.dart';
+import 'package:appsyncing/db/note_table.dart';
 import 'package:appsyncing/exception/exception_handling.dart';
 import 'package:appsyncing/models/note_model.dart';
 import 'package:appsyncing/repository/Network/network_handler.dart';
+import 'package:get/get.dart';
 
 // {
 //         "id": 3,
@@ -39,11 +41,32 @@ class SyncFunctions {
 
   static Future<bool> syncOnlineToLocal(
       {required List<NoteModel> onlineNotes}) async {
-    for (NoteModel note in onlineNotes) {
-      // if trackingID exists, check conflict first, then update if no conflict
-      // else, create
+    bool success = true;
+    try {
+      for (NoteModel note in onlineNotes) {
+        // if trackingID exists, check conflict first, then update if no conflict
+        // else, create
+        if (note.trackingId != null &&
+            (note.trackingId ?? '').trim().isNotEmpty) {
+          bool trackerExists =
+              await NoteTable.trackingIdExists(trackingID: note.trackingId!);
+          if (trackerExists) {
+            // check conflict first, then update if no conflict
+          } else {
+            // create
+            NoteModel? createdNote = await NoteTable.create(
+                note.copyWith(mergeConflict: false, synced: true));
+            if (createdNote == null) {
+              success = false;
+            }
+          }
+        }
+      }
+    } catch (_) {
+      Get.log("Error occured on syncOnlineToLocal fn");
+      success = false;
     }
 
-    return true;
+    return success;
   }
 }

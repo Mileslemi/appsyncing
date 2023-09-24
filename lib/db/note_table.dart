@@ -17,7 +17,7 @@ class NoteTable {
 
       return note.copyWith(id: id);
     } on Exception catch (_) {
-      Get.snackbar("Conflict Error", "${note.trackingId} Already Exists");
+      Get.log("Conflict Error. ${note.trackingId} Already Exists");
     }
     return null;
   }
@@ -68,5 +68,19 @@ class NoteTable {
         where: "${NoteFields.id} = ?", whereArgs: [note.id]);
 
     return count;
+  }
+
+  static Future<bool> trackingIdExists({required String trackingID}) async {
+    final db = await AppSyncDatabase.instance.database;
+
+    var count = Sqflite.firstIntValue(await db.rawQuery(
+        'SELECT COUNT(*) FROM $noteTableName WHERE "${NoteFields.trackingId}" = "$trackingID"'));
+
+    //  returns [{COUNT(*): 0}]
+    if ((count ?? 1) > 0) {
+      return true;
+    }
+
+    return false;
   }
 }
