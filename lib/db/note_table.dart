@@ -70,17 +70,26 @@ class NoteTable {
     return count;
   }
 
-  static Future<bool> trackingIdExists({required String trackingID}) async {
+  static Future<NoteModel?> trackingIdExists(
+      {required String trackingID}) async {
     final db = await AppSyncDatabase.instance.database;
 
-    var count = Sqflite.firstIntValue(await db.rawQuery(
-        'SELECT COUNT(*) FROM $noteTableName WHERE "${NoteFields.trackingId}" = "$trackingID"'));
+    List notes = await db.query(noteTableName,
+        where: "${NoteFields.trackingId} = ?", whereArgs: [trackingID]);
+    // var count = Sqflite.firstIntValue(await db.rawQuery(
+    //     'SELECT COUNT(*) FROM $noteTableName WHERE "${NoteFields.trackingId}" = "$trackingID"'));
 
-    //  returns [{COUNT(*): 0}]
-    if ((count ?? 1) > 0) {
-      return true;
+    // //  returns [{COUNT(*): 0}]
+    // if ((count ?? 1) > 0) {
+    //   return true;
+    // }
+
+    if (notes.isNotEmpty) {
+      List<NoteModel> notesList =
+          notes.map((e) => NoteModel.fromMap(e)).toList();
+      return notesList[0];
     }
 
-    return false;
+    return null;
   }
 }

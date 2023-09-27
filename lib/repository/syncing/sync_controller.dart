@@ -63,13 +63,13 @@ class SyncController extends GetxController {
       Success s = response as Success;
       var returnMap = jsonDecode(s.returnValue);
       try {
-        String? lastModified = returnMap['last_modified'];
+        String? lastEntryMadeInMain = returnMap['last_entry_made'];
 
-        if (lastModified != null) {
-          DateTime lastModifiedDateTime = DateTime.parse(lastModified);
+        if (lastEntryMadeInMain != null) {
+          DateTime lastEntryDateTime = DateTime.parse(lastEntryMadeInMain);
           // compare lastSync and lastModified
           int difference = ADateTimeFunctions.dateDifferenceInMin(
-              lastModifiedDateTime, lastNoteTableSync.value);
+              lastEntryDateTime, lastNoteTableSync.value);
           // print(difference);
           if (difference > 0) {
             return true;
@@ -108,6 +108,7 @@ class SyncController extends GetxController {
 
   void pushNotes() async {
     syncing.value = true;
+    // push any modified notes, or any notes whose sync is false, and mergeConflict false
 
     syncing.value = false;
   }

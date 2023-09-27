@@ -122,8 +122,8 @@ class NoteModel {
       posted: map['posted'] != null
           ? DateTime.parse((map['posted'] ?? '') as String)
           : null,
-      lastModified: map['lastModified'] != null
-          ? DateTime.parse((map['lastModified'] ?? '') as String)
+      lastModified: map['lastModifiedAt'] != null
+          ? DateTime.parse((map['lastModifiedAt'] ?? '') as String)
           : null,
       // these two values are not in the json body, set sync as true since we're pulling
       // for mergeConflict, check if that trackingId exists in local, if true check if modified[you can assert this by checking if synced is true, because on modifying synced is automaticall set to false]

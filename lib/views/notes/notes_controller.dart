@@ -116,8 +116,8 @@ class NotesController extends GetxController {
       required String desc}) async {
     DateTime now = DateTime.now();
 
-    NoteModel updateNote =
-        note.copyWith(title: title, description: desc, lastModified: now);
+    NoteModel updateNote = note.copyWith(
+        title: title, description: desc, lastModified: now, synced: false);
 
     await NoteTable.update(updateNote);
 
