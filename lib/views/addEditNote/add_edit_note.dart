@@ -5,6 +5,7 @@ import 'package:appsyncing/views/notes/notes_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../common_methods/date_functions.dart';
 import '../../common_widgets/note_extra_info.dart';
 import '../../constants/sizes.dart';
 
@@ -54,13 +55,19 @@ class AddEditeNote extends StatelessWidget {
                             NoteDetailRow(
                                 title: "Creator", detail: "${note?.user}"),
                             NoteDetailRow(
-                                title: "Created", detail: "${note?.posted}"),
+                              title: "Created",
+                              detail: ADateTimeFunctions.convertToFormat(
+                                  formatNeeded: "H:mm y-MM-dd",
+                                  dateTime: note?.posted?.toLocal()),
+                            ),
                             NoteDetailRow(
                                 title: "At Branch",
                                 detail: "${note?.branchName}"),
                             NoteDetailRow(
                               title: "Last Modified",
-                              detail: "${note?.lastModified}",
+                              detail: ADateTimeFunctions.convertToFormat(
+                                  formatNeeded: "H:mm y-MM-dd",
+                                  dateTime: note?.lastModified?.toLocal()),
                             ),
                             (note?.synced ?? false)
                                 ? NoteDetailRow(

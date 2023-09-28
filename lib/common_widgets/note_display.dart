@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 
+import '../common_methods/date_functions.dart';
 import '../views/addEditNote/add_edit_note.dart';
 import 'note_extra_info.dart';
 
@@ -96,7 +97,7 @@ Widget noteTile(NoteModel note) => Card(
                   maxLines: 3,
                 ),
                 Text(
-                  "Posted At : ${note.posted ?? ''}",
+                  "Posted On : ${ADateTimeFunctions.convertToFormat(formatNeeded: "H:mm y-MM-dd", dateTime: note.posted?.toLocal())}",
                   overflow: TextOverflow.ellipsis,
                   maxLines: 3,
                 ),

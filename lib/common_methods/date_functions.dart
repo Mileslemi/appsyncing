@@ -15,6 +15,14 @@ class ADateTimeFunctions {
     }
   }
 
+  static String convertToFormat(
+      {required String formatNeeded, required DateTime? dateTime}) {
+    if (dateTime != null) {
+      return DateFormat(formatNeeded).format(dateTime);
+    }
+    return "null";
+  }
+
   static int dateDifferenceInDays(DateTime? val, DateTime? val2) {
     try {
       int diff = val!.difference(val2!).inDays;

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../constants/sizes.dart';
+import '../../repository/syncing/sync_controller.dart';
 
 class AllNotes extends StatelessWidget {
   const AllNotes({
@@ -16,8 +17,8 @@ class AllNotes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final allNotesCtrl = Get.find<NotesController>();
     final authCtrl = Get.find<AuthenticationController>();
+    final syncCtrl = Get.find<SyncController>();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Column(
@@ -31,7 +32,7 @@ class AllNotes extends StatelessWidget {
                 Text(
                     "Welcome, ${authCtrl.user.value.firstName} ${authCtrl.user.value.lastName}"),
                 Text(
-                  "Last Sync: ${allNotesCtrl.lastSync}",
+                  "Last Sync: ${syncCtrl.lastNoteSyncToDisplay}",
                 ),
               ],
             ),

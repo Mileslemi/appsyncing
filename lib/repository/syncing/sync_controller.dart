@@ -7,6 +7,7 @@ import 'package:appsyncing/models/note_model.dart';
 import 'package:appsyncing/models/sync_model.dart';
 import 'package:appsyncing/repository/Network/network_handler.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import '../../common_methods/date_functions.dart';
 import '../../common_methods/sync_notes.dart';
@@ -15,6 +16,8 @@ class SyncController extends GetxController {
   static SyncController get instance => Get.find();
 
   late Rx<DateTime?> lastNoteTableSync;
+
+  RxString lastNoteSyncToDisplay = "".obs;
   RxBool noteChanges = false.obs;
 
   RxBool syncing = false.obs;
@@ -43,6 +46,8 @@ class SyncController extends GetxController {
     SyncModel noteSync = await SyncTable.read(tableName);
 
     if (noteSync.id != null) {
+      lastNoteSyncToDisplay.value = ADateTimeFunctions.convertToFormat(
+          formatNeeded: "H:mm y-MM-dd", dateTime: noteSync.lastSync?.toLocal());
       return noteSync.lastSync!;
     } else {
       //if that table is not found, then it's a new db, initiate it with default SyncModel
@@ -99,6 +104,8 @@ class SyncController extends GetxController {
         // after sucessfully adding all, update last sync to lastCheck
         SyncModel noteTableSync = await SyncTable.read(noteTableName);
         await SyncTable.update(noteTableSync.copyWith(lastSync: lastCheck));
+        lastNoteSyncToDisplay.value =
+            DateFormat("h:m, y-MM-dd").format(lastCheck.toLocal());
         await pushNotes();
       }
 

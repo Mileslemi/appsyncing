@@ -22,8 +22,6 @@ class NotesController extends GetxController {
 
   RxList<NoteModel> conflictNotes = RxList([]);
 
-  RxString lastSync = "2023-09-13 ...".obs;
-
   RxBool fetching = false.obs;
   RxBool syncing = false.obs;
 
@@ -33,7 +31,6 @@ class NotesController extends GetxController {
     fetchAllOnlyLocalMadeNotes();
     fetchConflictNotes();
 
-    ever(syncing, (callback) => fetchLastSyncTime());
     ever(authCtrl.localBranch, (callback) => updatesNotesList());
     super.onInit();
   }
@@ -176,12 +173,5 @@ class NotesController extends GetxController {
     } on Exception catch (e) {
       Get.log("$e");
     }
-  }
-
-  void fetchLastSyncTime() {
-    // new sync time
-    // make a sync log time table
-
-    lastSync.value = "New Sync Time";
   }
 }

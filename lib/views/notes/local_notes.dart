@@ -1,11 +1,13 @@
 import 'dart:io';
 
+import 'package:appsyncing/repository/syncing/sync_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../common_widgets/loading_widget.dart';
 import '../../common_widgets/note_display.dart';
 import '../../constants/sizes.dart';
+
 import '../../repository/authentication/authentication_controller.dart';
 import 'notes_controller.dart';
 
@@ -14,8 +16,8 @@ class LocalNotes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final allNotesCtrl = Get.find<NotesController>();
     final authCtrl = Get.find<AuthenticationController>();
+    final syncCtrl = Get.find<SyncController>();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Column(
@@ -29,7 +31,7 @@ class LocalNotes extends StatelessWidget {
                 Text(
                     "Welcome, ${authCtrl.user.value.firstName} ${authCtrl.user.value.lastName}"),
                 Text(
-                  "Last Sync: ${allNotesCtrl.lastSync}",
+                  "Last Sync: ${syncCtrl.lastNoteSyncToDisplay}",
                 ),
               ],
             ),
