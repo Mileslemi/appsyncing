@@ -9,7 +9,7 @@ import 'package:appsyncing/repository/Network/network_handler.dart';
 import 'package:get/get.dart';
 
 import '../../common_methods/date_functions.dart';
-import '../../common_methods/fetch_online_notes.dart';
+import '../../common_methods/sync_notes.dart';
 
 class SyncController extends GetxController {
   static SyncController get instance => Get.find();
@@ -25,12 +25,13 @@ class SyncController extends GetxController {
   void onInit() async {
     lastNoteTableSync = Rx(await getLastSync(tableName: noteTableName));
 
-    ever(noteChanges, (e) {
+    ever(noteChanges, (e) async {
       if (e) {
-        pullNotes(lastCheck: lastNoteTableSyncChecked.value);
+        print("pulling");
+        await pullNotes(lastCheck: lastNoteTableSyncChecked.value);
       } else {
-        // if no changes online push local notes that have been modified since last sync
-        pushNotes();
+        // if no changes online push local notes that have sync as false and mergeConflict as false also
+        await pushNotes();
       }
     });
     noteChanges.value =
@@ -82,7 +83,7 @@ class SyncController extends GetxController {
     return false;
   }
 
-  void pullNotes({required DateTime lastCheck}) async {
+  Future<void> pullNotes({required DateTime lastCheck}) async {
     // on success pull, update last sync time with the time you checkedNoteTbale changes
     syncing.value = true;
     if (lastNoteTableSync.value != null) {
@@ -97,6 +98,7 @@ class SyncController extends GetxController {
         // after sucessfully adding all, update last sync to lastCheck
         SyncModel noteTableSync = await SyncTable.read(noteTableName);
         await SyncTable.update(noteTableSync.copyWith(lastSync: lastCheck));
+        await pushNotes();
       }
 
       // push local note to online, ones without merge conflict
@@ -106,10 +108,11 @@ class SyncController extends GetxController {
     syncing.value = false;
   }
 
-  void pushNotes() async {
+  Future<void> pushNotes() async {
+    print("pushing notes");
     syncing.value = true;
-    // push any modified notes, or any notes whose sync is false, and mergeConflict false
-
+    // push any modified notes[ any notes whose sync is false] and mergeConflict false
+    await SyncFunctions.pushLocalToOnline();
     syncing.value = false;
   }
 }

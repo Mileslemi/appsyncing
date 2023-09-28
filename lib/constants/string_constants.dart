@@ -39,4 +39,8 @@ class UrlStrings {
   static String getOnlineModifiedNotesUrl() {
     return "$myApiBaseUrl/getModifiedNotes/";
   }
+
+  static String pushLocalToOnlineUrl() {
+    return "$myApiBaseUrl/syncNotes/";
+  }
 }

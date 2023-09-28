@@ -84,4 +84,29 @@ class SyncFunctions {
 
     return success;
   }
+
+  static Future<void> pushLocalToOnline() async {
+    List<NoteModel> allNotesToPush = await NoteTable.getNotesToPush();
+
+    final response = await NetworkHandler.post(
+      url: UrlStrings.pushLocalToOnlineUrl(),
+      body: {"notes": jsonEncode(allNotesToPush)},
+    );
+    if (response is Success) {
+      Success s = response as Success;
+      String messageR = jsonDecode(s.returnValue);
+      print(messageR);
+      if (messageR == "1") {
+        print("success");
+        //all successful, update allNotesToPush synced to true
+        for (NoteModel syncedNote in allNotesToPush) {
+          await NoteTable.update(syncedNote.copyWith(synced: true));
+        }
+      } else {
+        Get.log("Error Pushing notes to remote. The Error, $messageR.");
+      }
+    } else {
+      Get.log("Failure on pushing note online");
+    }
+  }
 }
