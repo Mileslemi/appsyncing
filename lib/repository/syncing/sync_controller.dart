@@ -105,7 +105,7 @@ class SyncController extends GetxController {
         SyncModel noteTableSync = await SyncTable.read(noteTableName);
         await SyncTable.update(noteTableSync.copyWith(lastSync: lastCheck));
         lastNoteSyncToDisplay.value =
-            DateFormat("h:m, y-MM-dd").format(lastCheck.toLocal());
+            DateFormat("H:m y-MM-dd").format(lastCheck.toLocal());
         await pushNotes();
       }
 
