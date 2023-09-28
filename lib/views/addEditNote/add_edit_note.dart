@@ -53,7 +53,7 @@ class AddEditeNote extends StatelessWidget {
                               height: defaultSpacing,
                             ),
                             NoteDetailRow(
-                                title: "Creator", detail: "${note?.user}"),
+                                title: "Editor", detail: "${note?.user}"),
                             NoteDetailRow(
                               title: "Created",
                               detail: ADateTimeFunctions.convertToFormat(

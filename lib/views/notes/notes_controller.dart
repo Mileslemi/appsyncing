@@ -114,7 +114,11 @@ class NotesController extends GetxController {
     DateTime now = DateTime.now().toUtc();
 
     NoteModel updateNote = note.copyWith(
-        title: title, description: desc, lastModified: now, synced: false);
+        user: authCtrl.user.value.username,
+        title: title,
+        description: desc,
+        lastModified: now,
+        synced: false);
 
     await NoteTable.update(updateNote);
 
