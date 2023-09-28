@@ -19,7 +19,7 @@ class SyncController extends GetxController {
 
   RxBool syncing = false.obs;
 
-  Rx<DateTime> lastNoteTableSyncChecked = Rx(DateTime.now());
+  Rx<DateTime> lastNoteTableSyncChecked = Rx(DateTime.now().toUtc());
 
   @override
   void onInit() async {
@@ -57,7 +57,7 @@ class SyncController extends GetxController {
   }
 
   Future<bool> checkTableChanges({required String url}) async {
-    lastNoteTableSyncChecked.value = DateTime.now();
+    lastNoteTableSyncChecked.value = DateTime.now().toUtc();
     final response = await NetworkHandler.get(url);
 
     if (response is Success) {
@@ -67,7 +67,8 @@ class SyncController extends GetxController {
         String? lastEntryMadeInMain = returnMap['last_entry_made'];
 
         if (lastEntryMadeInMain != null) {
-          DateTime lastEntryDateTime = DateTime.parse(lastEntryMadeInMain);
+          DateTime lastEntryDateTime =
+              DateTime.parse(lastEntryMadeInMain).toUtc();
           // compare lastSync and lastModified
           int difference = ADateTimeFunctions.dateDifferenceInMin(
               lastEntryDateTime, lastNoteTableSync.value);

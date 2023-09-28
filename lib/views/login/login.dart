@@ -148,7 +148,7 @@ class LoginScreen extends StatelessWidget {
                       // UserTable.delete(2);
                       // SyncTable.delete(1);
                       // SyncTable.create(SyncModel(
-                      //     lastSync: DateTime.now(),
+                      //     lastSync: DateTime.now().toUtc(),
                       //     rowsEntered: 0,
                       //     tableName: "test"));
                       // *****

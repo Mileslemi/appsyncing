@@ -97,7 +97,7 @@ class AuthenticationController extends GetxController {
             lastName: fetchedUser['last_name'],
             email: fetchedUser['email'],
             isAdmin: true,
-            joined: DateTime.now(),
+            joined: DateTime.now().toUtc(),
           );
         }
 
@@ -135,7 +135,7 @@ class AuthenticationController extends GetxController {
       // add to local table,
 
       LocalBranch addedBranch = await BranchTable.create(LocalBranch(
-          branchName: branch.branchName, createdAt: DateTime.now()));
+          branchName: branch.branchName, createdAt: DateTime.now().toUtc()));
       // confirm only that added, and one row only exists
       int secondcount = await BranchTable.branchCount();
       if (secondcount == 1) {

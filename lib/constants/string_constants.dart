@@ -11,7 +11,7 @@ const String positiveNumericValuePattern = r"^[0-9]+([.][0-9]+)?$";
 const String apiUsername = "ck_e42a54fb75e8c52894547034e190c566fb3cad96";
 const String apiPassword = "cs_d9adc62d6af04b8aea0cc17b356796cc148bdec7";
 
-DateTime defaultTime = DateTime(2023);
+DateTime defaultTime = DateTime(2023).toUtc();
 
 class UrlStrings {
   UrlStrings._();

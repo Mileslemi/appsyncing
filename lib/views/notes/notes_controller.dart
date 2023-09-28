@@ -39,7 +39,7 @@ class NotesController extends GetxController {
   }
 
   void addLcalNote({required String title, required String desc}) async {
-    DateTime now = DateTime.now();
+    DateTime now = DateTime.now().toUtc();
 
     // don't use this func on synced rows, only those entered locally
     Map result = await trackTableRowsEntered(tableName: noteTableName);
@@ -114,7 +114,7 @@ class NotesController extends GetxController {
       {required NoteModel note,
       required String title,
       required String desc}) async {
-    DateTime now = DateTime.now();
+    DateTime now = DateTime.now().toUtc();
 
     NoteModel updateNote = note.copyWith(
         title: title, description: desc, lastModified: now, synced: false);
