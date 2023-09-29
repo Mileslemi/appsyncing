@@ -1,7 +1,3 @@
-import 'package:appsyncing/models/note_model.dart';
-import 'package:get/get.dart';
-import 'package:sqflite/sqflite.dart';
-
 import '../models/note_conflict_model.dart';
 import 'appsync_db.dart';
 

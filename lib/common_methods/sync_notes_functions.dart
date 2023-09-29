@@ -45,17 +45,17 @@ class SyncFunctions {
       {required List<NoteModel> onlineNotes}) async {
     bool success = true;
     try {
-      for (NoteModel note in onlineNotes) {
+      for (NoteModel onlineNote in onlineNotes) {
         // if trackingID exists, check conflict first, then update if no conflict
         // else, create
-        if (note.trackingId != null &&
-            (note.trackingId ?? '').trim().isNotEmpty) {
-          NoteModel? noteExists =
-              await NoteTable.trackingIdExists(trackingID: note.trackingId!);
+        if (onlineNote.trackingId != null &&
+            (onlineNote.trackingId ?? '').trim().isNotEmpty) {
+          NoteModel? noteExists = await NoteTable.trackingIdExists(
+              trackingID: onlineNote.trackingId!);
           if (noteExists != null) {
             // check conflict first, then update if no conflict
-            if (note.lastModified == noteExists.lastModified) {
-              print("same modified time, ${note.trackingId}");
+            if (onlineNote.lastModified == noteExists.lastModified) {
+              print("same modified time, ${onlineNote.trackingId}");
               //make sure timezones are same
               //if modified times are same, then no update happened, and this is a note that was prevously pushed from this local server to main after sync time/pulling time
               continue;
@@ -63,15 +63,15 @@ class SyncFunctions {
               // there is a conflict as it modified online but also locally
 
               print(
-                  "conflict as it's modified online but also locally, ${note.trackingId}");
+                  "conflict as it's modified online but also locally, ${onlineNote.trackingId}");
               int change = await NoteTable.update(
-                  note.copyWith(id: noteExists.id, mergeConflict: true));
+                  onlineNote.copyWith(id: noteExists.id, mergeConflict: true));
               if (change > 0) {
                 NoteConflict? theCnflict = await NoteConflictTable.create(
                     NoteConflict(
                         trackingId: noteExists.trackingId,
-                        title: note.title,
-                        description: note.description));
+                        title: onlineNote.title,
+                        description: onlineNote.description));
                 if (theCnflict == null) {
                   success = false;
                 }
@@ -81,10 +81,11 @@ class SyncFunctions {
               continue;
             } else {
               // syced is true, no modification has happened locally
-              print("another modified time, no conflict ${note.trackingId}");
+              print(
+                  "another modified time, no conflict ${onlineNote.trackingId}");
               //we need the auto _id in order to update
-              int changes =
-                  await NoteTable.update(note.copyWith(id: noteExists.id));
+              int changes = await NoteTable.update(
+                  onlineNote.copyWith(id: noteExists.id));
               if (changes < 1) {
                 //  no update made
                 success = false;
@@ -94,7 +95,7 @@ class SyncFunctions {
           } else {
             // create
             NoteModel? createdNote = await NoteTable.create(
-                note.copyWith(mergeConflict: false, synced: true));
+                onlineNote.copyWith(mergeConflict: false, synced: true));
             if (createdNote == null) {
               success = false;
             }

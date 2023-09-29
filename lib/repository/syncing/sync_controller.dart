@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 
 import '../../common_methods/date_functions.dart';
 import '../../common_methods/sync_notes_functions.dart';
+import '../../db/note_table.dart';
 
 class SyncController extends GetxController {
   static SyncController get instance => Get.find();
@@ -18,6 +19,9 @@ class SyncController extends GetxController {
   late Rx<DateTime?> lastNoteTableSync;
 
   RxString lastNoteSyncToDisplay = "".obs;
+
+  RxBool isThereConflict = true.obs;
+
   RxBool noteChanges = false.obs;
 
   RxBool syncing = false.obs;
@@ -28,17 +32,28 @@ class SyncController extends GetxController {
   void onInit() async {
     lastNoteTableSync = Rx(await getLastSync(tableName: noteTableName));
 
-    ever(noteChanges, (e) async {
-      if (e) {
-        print("pulling");
-        await pullNotes(lastCheck: lastNoteTableSyncChecked.value);
+    ever(isThereConflict, (thereIs) async {
+      if (!thereIs) {
+        Get.log("Conflict notes don't exist");
+        noteChanges.value =
+            await checkTableChanges(url: UrlStrings.checkNoteTableChangesUrl());
+      }
+    });
+
+    ever(noteChanges, (thereAreChanges) async {
+      if (thereAreChanges) {
+        Get.log("pulling");
+        await pullNotes(newCheck: lastNoteTableSyncChecked.value);
       } else {
         // if no changes online push local notes that have sync as false and mergeConflict as false also
         await pushNotes();
       }
     });
-    noteChanges.value =
-        await checkTableChanges(url: UrlStrings.checkNoteTableChangesUrl());
+
+    // this is to make sure no new data is pulled from main if there are conflicts on local
+    await checkIfConflict();
+    // noteChanges.value =
+    //     await checkTableChanges(url: UrlStrings.checkNoteTableChangesUrl());
     super.onInit();
   }
 
@@ -59,6 +74,13 @@ class SyncController extends GetxController {
       }
     }
     return null;
+  }
+
+  Future<void> checkIfConflict() async {
+    List<NoteModel> conflictNotes = await NoteTable.getConflictNotes();
+    if (conflictNotes.isEmpty) {
+      isThereConflict.value = false;
+    }
   }
 
   Future<bool> checkTableChanges({required String url}) async {
@@ -89,7 +111,7 @@ class SyncController extends GetxController {
     return false;
   }
 
-  Future<void> pullNotes({required DateTime lastCheck}) async {
+  Future<void> pullNotes({required DateTime newCheck}) async {
     // on success pull, update last sync time with the time you checkedNoteTbale changes
     syncing.value = true;
     if (lastNoteTableSync.value != null) {
@@ -103,9 +125,9 @@ class SyncController extends GetxController {
       if (allSuccess) {
         // after sucessfully adding all, update last sync to lastCheck
         SyncModel noteTableSync = await SyncTable.read(noteTableName);
-        await SyncTable.update(noteTableSync.copyWith(lastSync: lastCheck));
+        await SyncTable.update(noteTableSync.copyWith(lastSync: newCheck));
         lastNoteSyncToDisplay.value =
-            DateFormat("H:m y-MM-dd").format(lastCheck.toLocal());
+            DateFormat("H:m y-MM-dd").format(newCheck.toLocal());
         await pushNotes();
       }
 
@@ -117,7 +139,7 @@ class SyncController extends GetxController {
   }
 
   Future<void> pushNotes() async {
-    print("pushing notes");
+    Get.log("pushing notes");
     syncing.value = true;
     // push any modified notes[ any notes whose sync is false] and mergeConflict false
     await SyncFunctions.pushLocalToOnline();
