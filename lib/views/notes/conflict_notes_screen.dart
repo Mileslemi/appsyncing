@@ -5,11 +5,10 @@ import 'package:get/get.dart';
 
 import '../../common_widgets/loading_widget.dart';
 import '../../common_widgets/note_display.dart';
-
 import 'notes_controller.dart';
 
-class LocalNotes extends StatelessWidget {
-  const LocalNotes({super.key});
+class ConflictNotesScreen extends StatelessWidget {
+  const ConflictNotesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,12 +17,12 @@ class LocalNotes extends StatelessWidget {
       child: GetBuilder<NotesController>(builder: (controller) {
         return Stack(
           children: [
-            controller.allNotes.isNotEmpty
+            controller.conflictNotes.isNotEmpty
                 ? (Platform.isIOS || Platform.isAndroid)
-                    ? buildNotes(controller.localNotes)
-                    : buildNotesDeskTop(controller.localNotes)
+                    ? buildNotes(controller.conflictNotes)
+                    : buildNotesDeskTop(controller.conflictNotes)
                 : const Center(
-                    child: Text("No Local Notes...."),
+                    child: Text("No Conflict Notes...."),
                   ),
             controller.fetching.value
                 ? const LoadingWidget()

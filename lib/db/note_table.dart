@@ -60,6 +60,15 @@ class NoteTable {
     return notes.map((e) => NoteModel.fromMap(e)).toList();
   }
 
+  static Future<List<NoteModel>> getUnsycedNotes() async {
+    final db = await AppSyncDatabase.instance.database;
+
+    List notes = await db.query(noteTableName,
+        where: "${NoteFields.synced} = ?", whereArgs: [0]);
+
+    return notes.map((e) => NoteModel.fromMap(e)).toList();
+  }
+
   static Future<List<NoteModel>> getNotesToPush() async {
     final db = await AppSyncDatabase.instance.database;
 

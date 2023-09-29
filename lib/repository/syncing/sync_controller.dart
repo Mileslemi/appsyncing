@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../common_methods/date_functions.dart';
-import '../../common_methods/sync_notes.dart';
+import '../../common_methods/sync_notes_functions.dart';
 
 class SyncController extends GetxController {
   static SyncController get instance => Get.find();

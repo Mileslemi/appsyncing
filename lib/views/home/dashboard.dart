@@ -56,6 +56,10 @@ class DashBoard extends StatelessWidget {
                 icon: Icon(Icons.warning_amber_rounded),
                 label: 'Conflicts',
               ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.refresh),
+                label: 'Unsynced Notes',
+              ),
             ]),
       ),
     );

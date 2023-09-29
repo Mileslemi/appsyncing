@@ -22,6 +22,8 @@ class NotesController extends GetxController {
 
   RxList<NoteModel> conflictNotes = RxList([]);
 
+  RxList<NoteModel> unSyncedNotes = RxList([]);
+
   RxBool fetching = false.obs;
   RxBool syncing = false.obs;
 
@@ -30,6 +32,7 @@ class NotesController extends GetxController {
     fetchAllNotes();
     fetchAllOnlyLocalMadeNotes();
     fetchConflictNotes();
+    fetchUnsyncedNotes();
 
     ever(authCtrl.localBranch, (callback) => updatesNotesList());
     super.onInit();
@@ -130,6 +133,7 @@ class NotesController extends GetxController {
     fetchAllNotes();
     fetchAllOnlyLocalMadeNotes();
     fetchConflictNotes();
+    fetchUnsyncedNotes();
   }
 
   Future<void> fetchAllNotes() async {
@@ -162,6 +166,16 @@ class NotesController extends GetxController {
     try {
       localNotes.value = await NoteTable.getLocalyMadeNotes(
           branchName: authCtrl.localBranch.value.branchName ?? '');
+
+      update();
+    } on Exception catch (e) {
+      Get.log("$e");
+    }
+  }
+
+  Future<void> fetchUnsyncedNotes() async {
+    try {
+      unSyncedNotes.value = await NoteTable.getUnsycedNotes();
 
       update();
     } on Exception catch (e) {

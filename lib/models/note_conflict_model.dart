@@ -52,4 +52,18 @@ class NoteConflict {
 
   factory NoteConflict.fromJson(String source) =>
       NoteConflict.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  NoteConflict copyWith({
+    int? id,
+    String? trackingId,
+    String? title,
+    String? description,
+  }) {
+    return NoteConflict(
+      id: id ?? this.id,
+      trackingId: trackingId ?? this.trackingId,
+      title: title ?? this.title,
+      description: description ?? this.description,
+    );
+  }
 }

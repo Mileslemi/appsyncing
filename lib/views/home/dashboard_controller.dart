@@ -1,4 +1,5 @@
 import 'package:appsyncing/repository/authentication/authentication_controller.dart';
+import 'package:appsyncing/views/notes/conflict_notes_screen.dart';
 import 'package:appsyncing/views/notes/local_notes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,7 +15,11 @@ class DashBoardController extends GetxController {
 
   late Rx<Widget> currentPageWidget;
 
-  List<Widget> pages = <Widget>[const AllNotes(), const LocalNotes()];
+  List<Widget> pages = <Widget>[
+    const AllNotes(),
+    const LocalNotes(),
+    const ConflictNotesScreen(),
+  ];
   @override
   void onInit() {
     currentPageWidget = Rx<Widget>(pages[currentPage.value]);

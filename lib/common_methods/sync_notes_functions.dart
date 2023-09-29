@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 import 'package:appsyncing/constants/string_constants.dart';
+import 'package:appsyncing/db/note_conflict_table.dart';
 import 'package:appsyncing/db/note_table.dart';
 import 'package:appsyncing/exception/exception_handling.dart';
+import 'package:appsyncing/models/note_conflict_model.dart';
 import 'package:appsyncing/models/note_model.dart';
 import 'package:appsyncing/repository/Network/network_handler.dart';
 import 'package:get/get.dart';
@@ -54,18 +56,40 @@ class SyncFunctions {
             // check conflict first, then update if no conflict
             if (note.lastModified == noteExists.lastModified) {
               print("same modified time, ${note.trackingId}");
-              //make usre timezones are same, and dateformats okay and same
+              //make sure timezones are same
               //if modified times are same, then no update happened, and this is a note that was prevously pushed from this local server to main after sync time/pulling time
               continue;
             } else if (!(noteExists.synced!)) {
               // there is a conflict as it modified online but also locally
+
               print(
-                  "conflict as it modified online but also locally, ${note.trackingId}");
+                  "conflict as it's modified online but also locally, ${note.trackingId}");
+              int change = await NoteTable.update(
+                  note.copyWith(id: noteExists.id, mergeConflict: true));
+              if (change > 0) {
+                NoteConflict? theCnflict = await NoteConflictTable.create(
+                    NoteConflict(
+                        trackingId: noteExists.trackingId,
+                        title: note.title,
+                        description: note.description));
+                if (theCnflict == null) {
+                  success = false;
+                }
+              } else {
+                success = false;
+              }
+              continue;
             } else {
+              // syced is true, no modification has happened locally
               print("another modified time, no conflict ${note.trackingId}");
               //we need the auto _id in order to update
-              // we also need to resolve mergeConflicts
-              // await NoteTable.update(note.copyWith(id: noteExists.id));
+              int changes =
+                  await NoteTable.update(note.copyWith(id: noteExists.id));
+              if (changes < 1) {
+                //  no update made
+                success = false;
+              }
+              continue;
             }
           } else {
             // create
