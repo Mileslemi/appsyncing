@@ -65,7 +65,7 @@ class SyncFunctions {
               print(
                   "conflict as it's modified online but also locally, ${onlineNote.trackingId}");
               int change = await NoteTable.update(
-                  onlineNote.copyWith(id: noteExists.id, mergeConflict: true));
+                  noteExists.copyWith(mergeConflict: true));
               if (change > 0) {
                 NoteConflict? theCnflict = await NoteConflictTable.create(
                     NoteConflict(

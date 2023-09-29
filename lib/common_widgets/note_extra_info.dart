@@ -1,4 +1,6 @@
+import 'package:appsyncing/views/conflict/resolve_conflict_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../models/note_model.dart';
 
@@ -29,7 +31,9 @@ class NoteExtraInfo extends StatelessWidget {
               )
             : (note?.mergeConflict ?? false)
                 ? IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.to(() => ResolveConflictScreen(note: note));
+                    },
                     icon: const Icon(
                       Icons.warning,
                       color: Colors.amber,
