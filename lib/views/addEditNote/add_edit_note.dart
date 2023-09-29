@@ -132,10 +132,16 @@ class AddEditeNote extends StatelessWidget {
                                 onPressed: () {
                                   if (formKey.currentState!.validate()) {
                                     if (note?.id != null) {
-                                      notesCtrl.updateNote(
-                                          note: note!,
-                                          title: notesCtrl.titleText.text,
-                                          desc: notesCtrl.descText.text);
+                                      if (!(note?.mergeConflict ?? false)) {
+                                        // don't update if there is conflict
+                                        notesCtrl.updateNote(
+                                            note: note!,
+                                            title: notesCtrl.titleText.text,
+                                            desc: notesCtrl.descText.text);
+                                      } else {
+                                        Get.snackbar("Invalid",
+                                            "Resolve the conflict first");
+                                      }
                                     }
                                   }
                                 },
