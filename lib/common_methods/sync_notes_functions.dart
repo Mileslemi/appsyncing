@@ -7,6 +7,7 @@ import 'package:appsyncing/exception/exception_handling.dart';
 import 'package:appsyncing/models/note_conflict_model.dart';
 import 'package:appsyncing/models/note_model.dart';
 import 'package:appsyncing/repository/Network/network_handler.dart';
+import 'package:appsyncing/views/notes/notes_controller.dart';
 import 'package:get/get.dart';
 
 // {
@@ -134,6 +135,20 @@ class SyncFunctions {
       } else {
         Get.log("Failure on pushing note online");
       }
+    }
+  }
+
+  static Future<void> merge(
+      {required NoteModel? mergedNote,
+      required NoteConflict? noteConflict}) async {
+    if (mergedNote != null && noteConflict != null) {
+      await NoteTable.update(mergedNote);
+      // delete the conflict row
+      await NoteConflictTable.deleteConflict(noteConflict.id!);
+      // update all notes lists
+      NotesController.instance.updatesNotesList();
+    } else {
+      Get.log("Merge fn receiving a null mergedNote");
     }
   }
 }

@@ -6,6 +6,8 @@ import 'package:appsyncing/views/home/dashboard_controller.dart';
 import 'package:appsyncing/views/login/login_controller.dart';
 import 'package:get/get.dart';
 
+import 'views/conflict/resolve_conflict_ctrl.dart';
+
 class ProjectBindings implements Bindings {
   @override
   void dependencies() {
@@ -15,5 +17,6 @@ class ProjectBindings implements Bindings {
     Get.lazyPut(() => LoginController(), fenix: true);
     Get.lazyPut(() => DashBoardController(), fenix: true);
     Get.lazyPut(() => NotesController(), fenix: true);
+    Get.lazyPut(() => ResolveConflictController(), fenix: true);
   }
 }

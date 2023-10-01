@@ -1,109 +1,87 @@
-import 'package:appsyncing/models/note_conflict_model.dart';
-import 'package:appsyncing/models/note_model.dart';
+import 'package:appsyncing/common_methods/sync_notes_functions.dart';
+import 'package:appsyncing/common_widgets/loading_widget.dart';
+
+import 'package:appsyncing/views/conflict/resolve_conflict_ctrl.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../common_widgets/loading_widget.dart';
 import '../../constants/sizes.dart';
-import '../../db/note_conflict_table.dart';
 
 class ResolveConflictScreen extends StatelessWidget {
-  const ResolveConflictScreen({required this.note, super.key});
-
-  final NoteModel? note;
+  const ResolveConflictScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Future<NoteConflict?> getNoteConflict() async {
-      try {
-        NoteConflict? noteConflict = await NoteConflictTable.getConflict(
-            trackingId: note?.trackingId ?? '');
+    final resolveConflictCtrl = Get.find<ResolveConflictController>();
 
-        return noteConflict;
-      } catch (_) {
-        return null;
-      }
-    }
-
-    TextEditingController localtitleCtrl = TextEditingController();
-    TextEditingController localDescCtrl = TextEditingController();
-    TextEditingController onlinetitleCtrl = TextEditingController();
-    TextEditingController onlineDescCtrl = TextEditingController();
-
-    localtitleCtrl.text = note?.title ?? 'null';
-    localDescCtrl.text = note?.description ?? '';
     return Scaffold(
       appBar: AppBar(
         title: const Text("Resolve Conflict"),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            TextFormField(
-              initialValue: note?.trackingId,
-              enabled: false,
-              decoration:
-                  const InputDecoration(prefixIcon: Icon(Icons.track_changes)),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * .46,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text("Local Modifications"),
-                      const SizedBox(
-                        height: defaultSpacing,
-                      ),
-                      TextFormField(
-                        controller: localtitleCtrl,
-                        keyboardType: TextInputType.text,
-                        decoration: const InputDecoration(
-                          labelText: "Title",
-                          hintText: "Note Title",
-                          prefixIcon: Icon(Icons.title),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: defaultSpacing,
-                      ),
-                      TextFormField(
-                        controller: localDescCtrl,
-                        keyboardType: TextInputType.text,
-                        minLines: 4,
-                        maxLines: 5,
-                        decoration: const InputDecoration(
-                          labelText: "Description",
-                          hintText: "Note Description",
-                          prefixIcon: Icon(Icons.book),
-                        ),
-                      ),
-                    ],
-                  ),
+                TextFormField(
+                  initialValue: resolveConflictCtrl.note?.trackingId,
+                  enabled: false,
+                  decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.track_changes)),
                 ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * .46,
-                  child: FutureBuilder<NoteConflict?>(
-                    future: getNoteConflict(),
-                    builder: (context, snapshot) {
-                      List<Widget> children;
-                      if (snapshot.hasData) {
-                        NoteConflict? noteConflict = snapshot.data;
-                        if (noteConflict != null) {
-                          onlinetitleCtrl.text = noteConflict.title ?? '';
-                          onlineDescCtrl.text = noteConflict.description ?? '';
-                          children = [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * .46,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text("Local Modifications"),
+                          const SizedBox(
+                            height: defaultSpacing,
+                          ),
+                          TextFormField(
+                            controller: resolveConflictCtrl.localtitleCtrl,
+                            keyboardType: TextInputType.text,
+                            decoration: const InputDecoration(
+                              labelText: "Title",
+                              hintText: "Note Title",
+                              prefixIcon: Icon(Icons.title),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: defaultSpacing,
+                          ),
+                          TextFormField(
+                            controller: resolveConflictCtrl.localDescCtrl,
+                            keyboardType: TextInputType.text,
+                            minLines: 4,
+                            maxLines: 5,
+                            decoration: const InputDecoration(
+                              labelText: "Description",
+                              hintText: "Note Description",
+                              prefixIcon: Icon(Icons.book),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                        width: MediaQuery.of(context).size.width * .46,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
                             const Text("Online Modifications"),
                             const SizedBox(
                               height: defaultSpacing,
                             ),
                             TextFormField(
-                              controller: onlinetitleCtrl,
+                              controller: resolveConflictCtrl.onlinetitleCtrl,
                               keyboardType: TextInputType.text,
                               decoration: const InputDecoration(
                                 labelText: "Title",
@@ -115,7 +93,7 @@ class ResolveConflictScreen extends StatelessWidget {
                               height: defaultSpacing,
                             ),
                             TextFormField(
-                              controller: onlineDescCtrl,
+                              controller: resolveConflictCtrl.onlineDescCtrl,
                               keyboardType: TextInputType.text,
                               minLines: 4,
                               maxLines: 5,
@@ -125,55 +103,65 @@ class ResolveConflictScreen extends StatelessWidget {
                                 prefixIcon: Icon(Icons.book),
                               ),
                             ),
-                          ];
-                        } else {
-                          children = [
-                            const Center(
-                              child: Text("Error Loading the Conflict"),
-                            )
-                          ];
-                        }
-                      } else if (snapshot.hasError) {
-                        children = [
-                          const Center(
-                            child: Text("Error Loading the Conflict"),
-                          )
-                        ];
-                      } else {
-                        children = [
-                          const Center(
-                            child: LoadingWidget(),
-                          )
-                        ];
-                      }
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: children,
-                      );
-                    },
-                  ),
+                          ],
+                        ))
+                  ],
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Get.dialog(
+                      barrierDismissible: false,
+                      CupertinoAlertDialog(
+                        title: const Text("Warning!"),
+                        content: Text(
+                          "This will override local modifications with the right modifications.",
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () async {
+                              // close the dialog first
+                              Get.back();
+                              resolveConflictCtrl.merging.value = true;
+
+                              await SyncFunctions.merge(
+                                  mergedNote: resolveConflictCtrl.note
+                                      ?.copyWith(
+                                          title: resolveConflictCtrl
+                                              .onlinetitleCtrl.text,
+                                          description: resolveConflictCtrl
+                                              .onlineDescCtrl.text,
+                                          lastModified: DateTime.now().toUtc(),
+                                          synced: true,
+                                          mergeConflict: false),
+                                  noteConflict:
+                                      resolveConflictCtrl.theConflict);
+                              resolveConflictCtrl.merging.value = true;
+                              // setting overlays to true pops the dialog and backs one page
+                              Get.back(closeOverlays: true);
+                            },
+                            child: const Text("Ok"),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Get.back();
+                              // Navigator.of(context, rootNavigator: true).pop();
+                            },
+                            child: const Text('Cancel'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  child: const Text("Merge"),
                 )
               ],
             ),
-            ElevatedButton(
-              onPressed: () {
-                Get.defaultDialog(
-                  content: Text(
-                    "This will override local modifications with fetched online modifications.",
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                  confirm:
-                      TextButton(onPressed: () {}, child: const Text("Ok")),
-                  cancel:
-                      TextButton(onPressed: () {}, child: const Text('Cancel')),
-                  onCancel: () => Get.back(),
-                  onConfirm: () => Get.log("confirmed"),
-                );
-              },
-              child: const Text("Merge"),
-            )
-          ],
-        ),
+          ),
+          Obx(() => resolveConflictCtrl.merging.value
+              ? const LoadingWidget()
+              : const SizedBox())
+        ],
       ),
     );
   }

@@ -32,7 +32,8 @@ class NoteExtraInfo extends StatelessWidget {
             : (note?.mergeConflict ?? false)
                 ? IconButton(
                     onPressed: () {
-                      Get.to(() => ResolveConflictScreen(note: note));
+                      Get.to(() => const ResolveConflictScreen(),
+                          arguments: {"note": note});
                     },
                     icon: const Icon(
                       Icons.warning,
