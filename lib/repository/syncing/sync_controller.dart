@@ -22,7 +22,7 @@ class SyncController extends GetxController {
 
   RxBool isThereConflict = true.obs;
 
-  RxBool noteChangesOnline = false.obs;
+  // RxBool noteChangesOnline = false.obs;
 
   RxBool syncing = false.obs;
 
@@ -35,22 +35,22 @@ class SyncController extends GetxController {
     ever(isThereConflict, (thereIs) async {
       if (!thereIs) {
         Get.log("Conflict notes don't exist");
-        noteChangesOnline.value = await checkOnlineTableChanges(
+        await checkOnlineTableChanges(
             url: UrlStrings.checkNoteTableChangesUrl());
       } else {
         Get.log("IsThereconflict value turn true");
       }
     });
 
-    ever(noteChangesOnline, (thereAreChanges) async {
-      if (thereAreChanges) {
-        Get.log("pulling");
-        await pullNotes(newCheck: lastNoteTableSyncChecked.value);
-      } else {
-        // if no changes online push local notes that have sync as false and mergeConflict as false also
-        await pushNotes();
-      }
-    });
+    // ever(noteChangesOnline, (thereAreChanges) async {
+    //   if (thereAreChanges) {
+    //     Get.log("pulling");
+    //     await pullNotes(newCheck: lastNoteTableSyncChecked.value);
+    //   } else {
+    //     // if no changes online push local notes that have sync as false and mergeConflict as false also
+    //     await pushNotes();
+    //   }
+    // });
 
     // this is to make sure no new data is pulled from main if there are conflicts on local
     await checkIfConflict();
@@ -88,7 +88,7 @@ class SyncController extends GetxController {
     }
   }
 
-  Future<bool> checkOnlineTableChanges({required String url}) async {
+  Future<void> checkOnlineTableChanges({required String url}) async {
     lastNoteTableSyncChecked.value = DateTime.now().toUtc();
     final response = await NetworkHandler.get(url);
 
@@ -106,14 +106,17 @@ class SyncController extends GetxController {
               lastEntryDateTime, lastNoteTableSync.value);
           print("diff$difference");
           if (difference > 0) {
-            return true;
+            // there Are changes - pull notes
+            Get.log("pulling");
+            pullNotes(newCheck: lastNoteTableSyncChecked.value);
+          } else {
+            pushNotes();
           }
         }
       } catch (_) {
         Get.log("Error checking table changes");
       }
     }
-    return false;
   }
 
   Future<void> pullNotes({required DateTime newCheck}) async {
