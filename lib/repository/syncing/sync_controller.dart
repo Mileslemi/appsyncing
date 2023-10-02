@@ -12,6 +12,7 @@ import 'package:intl/intl.dart';
 import '../../common_methods/date_functions.dart';
 import '../../common_methods/sync_notes_functions.dart';
 import '../../db/note_table.dart';
+import '../../views/notes/notes_controller.dart';
 
 class SyncController extends GetxController {
   static SyncController get instance => Get.find();
@@ -165,6 +166,8 @@ class SyncController extends GetxController {
     syncing.value = true;
     // push any modified notes[ any notes whose sync is false] and mergeConflict false
     await SyncFunctions.pushLocalToOnline();
+    // update notes list
+    NotesController.instance.updatesNotesList();
     syncing.value = false;
   }
 }
