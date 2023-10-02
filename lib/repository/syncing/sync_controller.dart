@@ -110,6 +110,9 @@ class SyncController extends GetxController {
             Get.log("pulling");
             pullNotes(newCheck: lastNoteTableSyncChecked.value);
           } else {
+            updateSyncTime(
+                tableName: noteTableName,
+                newCheck: lastNoteTableSyncChecked.value);
             pushNotes();
           }
         }
@@ -132,11 +135,7 @@ class SyncController extends GetxController {
 
       if (allSuccess) {
         // after sucessfully adding all, update last sync to lastCheck
-        SyncModel noteTableSync = await SyncTable.read(noteTableName);
-        await SyncTable.update(noteTableSync.copyWith(lastSync: newCheck));
-        lastNoteTableSync.value = newCheck;
-        lastNoteSyncToDisplay.value =
-            DateFormat("H:m y-MM-dd").format(newCheck.toLocal());
+        updateSyncTime(tableName: noteTableName, newCheck: newCheck);
         await pushNotes();
       }
 
@@ -145,6 +144,20 @@ class SyncController extends GetxController {
       Get.log("Sync Failure! lastNoteTableSync value is null.");
     }
     syncing.value = false;
+  }
+
+  Future<void> updateSyncTime(
+      {required String tableName, required DateTime newCheck}) async {
+    Get.log("Updating Sync Time");
+    try {
+      SyncModel noteTableSync = await SyncTable.read(tableName);
+      await SyncTable.update(noteTableSync.copyWith(lastSync: newCheck));
+      lastNoteTableSync.value = newCheck;
+      lastNoteSyncToDisplay.value =
+          DateFormat("H:mm y-MM-dd").format(newCheck.toLocal());
+    } on Exception catch (_) {
+      Get.log("Error updating $tableName Sync Time");
+    }
   }
 
   Future<void> pushNotes() async {
