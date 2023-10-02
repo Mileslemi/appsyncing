@@ -102,9 +102,9 @@ class SyncController extends GetxController {
           DateTime lastEntryDateTime =
               DateTime.parse(lastEntryMadeInMain).toUtc();
           // compare lastSync and lastModified
-          int difference = ADateTimeFunctions.dateDifferenceInMin(
+          int difference = ADateTimeFunctions.dateDifferenceInSeconds(
               lastEntryDateTime, lastNoteTableSync.value);
-          print("diff$difference");
+          Get.log("diff in sync time: $difference");
           if (difference > 0) {
             // there Are changes - pull notes
             Get.log("pulling");

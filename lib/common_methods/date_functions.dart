@@ -41,9 +41,9 @@ class ADateTimeFunctions {
     }
   }
 
-  static int dateDifferenceInMin(DateTime? val, DateTime? val2) {
+  static int dateDifferenceInSeconds(DateTime? val, DateTime? val2) {
     try {
-      int diff = val!.difference(val2!).inMinutes;
+      int diff = val!.difference(val2!).inSeconds;
       return diff;
     } catch (e) {
       return 0;

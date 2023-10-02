@@ -57,15 +57,15 @@ class SyncFunctions {
           if (noteExists != null) {
             // check conflict first, then update if no conflict
             if (onlineNote.lastModified == noteExists.lastModified) {
-              print("same modified time, ${onlineNote.trackingId}");
+              // print("same modified time, ${onlineNote.trackingId}");
               //make sure timezones are same
               //if modified times are same, then no update happened, and this is a note that was prevously pushed from this local server to main after sync time/pulling time
               continue;
             } else if (!(noteExists.synced!)) {
               // there is a conflict as it modified online but also locally
 
-              print(
-                  "conflict as it's modified online but also locally, ${onlineNote.trackingId}");
+              // print(
+              //     "conflict as it's modified online but also locally, ${onlineNote.trackingId}");
               int change = await NoteTable.update(
                   noteExists.copyWith(mergeConflict: true));
               if (change > 0) {
@@ -83,8 +83,8 @@ class SyncFunctions {
               continue;
             } else {
               // syced is true, no modification has happened locally
-              print(
-                  "another modified time, no conflict ${onlineNote.trackingId}");
+              // print(
+              //     "another modified time, no conflict ${onlineNote.trackingId}");
               //we need the auto _id in order to update
               int changes = await NoteTable.update(
                   onlineNote.copyWith(id: noteExists.id));
@@ -123,9 +123,9 @@ class SyncFunctions {
       if (response is Success) {
         Success s = response as Success;
         String messageR = jsonDecode(s.returnValue);
-        print(messageR);
+        // print(messageR);
         if (messageR == "1") {
-          print("success");
+          // print("success");
           //all successful, update allNotesToPush synced to true
           for (NoteModel syncedNote in allNotesToPush) {
             await NoteTable.update(syncedNote.copyWith(synced: true));
