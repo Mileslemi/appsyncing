@@ -7,6 +7,7 @@ import 'package:appsyncing/exception/exception_handling.dart';
 import 'package:appsyncing/models/note_conflict_model.dart';
 import 'package:appsyncing/models/note_model.dart';
 import 'package:appsyncing/repository/Network/network_handler.dart';
+import 'package:appsyncing/repository/syncing/sync_controller.dart';
 import 'package:appsyncing/views/notes/notes_controller.dart';
 import 'package:get/get.dart';
 
@@ -147,6 +148,8 @@ class SyncFunctions {
       await NoteConflictTable.deleteConflict(noteConflict.id!);
       // update all notes lists
       NotesController.instance.updatesNotesList();
+      // check if any other conflict, if not, it initiate syncing
+      await SyncController.instance.checkIfConflict();
     } else {
       Get.log("Merge fn receiving a null mergedNote");
     }

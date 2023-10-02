@@ -132,7 +132,6 @@ class ResolveConflictScreen extends StatelessWidget {
                                           description: resolveConflictCtrl
                                               .onlineDescCtrl.text,
                                           lastModified: DateTime.now().toUtc(),
-                                          synced: true,
                                           mergeConflict: false),
                                   noteConflict:
                                       resolveConflictCtrl.theConflict);

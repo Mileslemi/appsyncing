@@ -1,3 +1,5 @@
+import 'package:appsyncing/common_widgets/loading_widget.dart';
+import 'package:appsyncing/repository/syncing/sync_controller.dart';
 import 'package:appsyncing/views/addEditNote/add_edit_note.dart';
 import 'package:appsyncing/views/home/dashboard_controller.dart';
 import 'package:flutter/material.dart';
@@ -12,20 +14,36 @@ class DashBoard extends StatelessWidget {
   Widget build(BuildContext context) {
     final dashboardCtrl = Get.find<DashBoardController>();
     final authCtrl = Get.find<AuthenticationController>();
+    final syncCtrl = Get.find<SyncController>();
     return Scaffold(
       appBar: AppBar(
-        title:
-            Obx(() => Text("Branch: ${authCtrl.localBranch.value.branchName}")),
+        title: Obx(
+          () => Text("Branch: ${authCtrl.localBranch.value.branchName}"),
+        ),
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () async {
+              await SyncController.instance.checkIfConflict();
+            },
             icon: const Icon(Icons.refresh),
           )
         ],
       ),
-      body: Obx(
-          () => dashboardCtrl.pages.elementAt(dashboardCtrl.currentPage.value)),
+      body: Stack(
+        children: [
+          Obx(
+            () => dashboardCtrl.pages.elementAt(
+              dashboardCtrl.currentPage.value,
+            ),
+          ),
+          Obx(
+            () => syncCtrl.syncing.value
+                ? const LoadingWidget()
+                : const SizedBox(),
+          )
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () => Get.to(

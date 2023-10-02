@@ -22,7 +22,7 @@ class SyncController extends GetxController {
 
   RxBool isThereConflict = true.obs;
 
-  RxBool noteChanges = false.obs;
+  RxBool noteChangesOnline = false.obs;
 
   RxBool syncing = false.obs;
 
@@ -35,12 +35,14 @@ class SyncController extends GetxController {
     ever(isThereConflict, (thereIs) async {
       if (!thereIs) {
         Get.log("Conflict notes don't exist");
-        noteChanges.value =
-            await checkTableChanges(url: UrlStrings.checkNoteTableChangesUrl());
+        noteChangesOnline.value = await checkOnlineTableChanges(
+            url: UrlStrings.checkNoteTableChangesUrl());
+      } else {
+        Get.log("IsThereconflict value turn true");
       }
     });
 
-    ever(noteChanges, (thereAreChanges) async {
+    ever(noteChangesOnline, (thereAreChanges) async {
       if (thereAreChanges) {
         Get.log("pulling");
         await pullNotes(newCheck: lastNoteTableSyncChecked.value);
@@ -76,14 +78,17 @@ class SyncController extends GetxController {
     return null;
   }
 
+  // this function can be used to initiate syncing with a btn.
+
   Future<void> checkIfConflict() async {
+    isThereConflict.value = true;
     List<NoteModel> conflictNotes = await NoteTable.getConflictNotes();
     if (conflictNotes.isEmpty) {
       isThereConflict.value = false;
     }
   }
 
-  Future<bool> checkTableChanges({required String url}) async {
+  Future<bool> checkOnlineTableChanges({required String url}) async {
     lastNoteTableSyncChecked.value = DateTime.now().toUtc();
     final response = await NetworkHandler.get(url);
 
@@ -99,7 +104,7 @@ class SyncController extends GetxController {
           // compare lastSync and lastModified
           int difference = ADateTimeFunctions.dateDifferenceInMin(
               lastEntryDateTime, lastNoteTableSync.value);
-          // print(difference);
+          print("diff$difference");
           if (difference > 0) {
             return true;
           }
@@ -126,6 +131,7 @@ class SyncController extends GetxController {
         // after sucessfully adding all, update last sync to lastCheck
         SyncModel noteTableSync = await SyncTable.read(noteTableName);
         await SyncTable.update(noteTableSync.copyWith(lastSync: newCheck));
+        lastNoteTableSync.value = newCheck;
         lastNoteSyncToDisplay.value =
             DateFormat("H:m y-MM-dd").format(newCheck.toLocal());
         await pushNotes();
