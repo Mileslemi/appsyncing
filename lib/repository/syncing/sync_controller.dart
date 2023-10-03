@@ -28,6 +28,10 @@ class SyncController extends GetxController {
 
   RxBool syncing = false.obs;
 
+  late Timer syncTimer;
+
+  RxBool autoSyncActive = true.obs;
+
   RxBool displayConflictWarning = false.obs;
 
   Rx<DateTime> lastNoteTableSyncChecked = Rx(DateTime.now().toUtc());
@@ -49,7 +53,7 @@ class SyncController extends GetxController {
     });
 
     // this enables periodic syncing
-    Timer.periodic(
+    syncTimer = Timer.periodic(
       const Duration(seconds: 7),
       (timer) async {
         // this is to make sure no new data is pulled from main if there are conflicts on local
@@ -58,6 +62,22 @@ class SyncController extends GetxController {
     );
 
     super.onInit();
+  }
+
+  void toggleAutoSync() {
+    if (syncTimer.isActive) {
+      syncTimer.cancel();
+      autoSyncActive.value = false;
+    } else {
+      syncTimer = Timer.periodic(
+        const Duration(seconds: 7),
+        (timer) async {
+          // this is to make sure no new data is pulled from main if there are conflicts on local
+          await checkIfConflict();
+        },
+      );
+      autoSyncActive.value = true;
+    }
   }
 
   Future<DateTime?> getLastSync({required String tableName}) async {

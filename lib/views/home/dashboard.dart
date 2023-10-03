@@ -44,6 +44,17 @@ class DashBoard extends StatelessWidget {
                 Text(
                   "Last Sync: ${syncCtrl.lastNoteSyncToDisplay}",
                 ),
+                Row(
+                  children: [
+                    const Text("Auto Sync"),
+                    Switch(
+                      value: SyncController.instance.autoSyncActive.value,
+                      onChanged: (value) {
+                        SyncController.instance.toggleAutoSync();
+                      },
+                    ),
+                  ],
+                )
               ],
             ),
           ),
