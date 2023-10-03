@@ -4,7 +4,6 @@ import 'package:appsyncing/views/notes/local_notes.dart';
 import 'package:appsyncing/views/notes/unsynced_notes_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../notes/allnotes.dart';
 
 class DashBoardController extends GetxController {
@@ -23,7 +22,7 @@ class DashBoardController extends GetxController {
     const UnSyncedNotesScreen()
   ];
   @override
-  void onInit() {
+  void onInit() async {
     currentPageWidget = Rx<Widget>(pages[currentPage.value]);
     ever(currentPage, (val) => changePage(toPage: val));
     super.onInit();

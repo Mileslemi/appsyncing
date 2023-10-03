@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:appsyncing/common_widgets/conflict_warning_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,22 +16,27 @@ class LocalNotes extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: GetBuilder<NotesController>(builder: (controller) {
-        return Stack(
-          children: [
-            controller.allNotes.isNotEmpty
-                ? (Platform.isIOS || Platform.isAndroid)
-                    ? buildNotes(controller.localNotes)
-                    : buildNotesDeskTop(controller.localNotes)
-                : const Center(
-                    child: Text("No Local Notes...."),
-                  ),
-            controller.fetching.value
-                ? const LoadingWidget()
-                : const SizedBox(),
-          ],
-        );
-      }),
+      child: Stack(
+        children: [
+          GetBuilder<NotesController>(builder: (controller) {
+            return Stack(
+              children: [
+                controller.allNotes.isNotEmpty
+                    ? (Platform.isIOS || Platform.isAndroid)
+                        ? buildNotes(controller.localNotes)
+                        : buildNotesDeskTop(controller.localNotes)
+                    : const Center(
+                        child: Text("No Local Notes...."),
+                      ),
+                controller.fetching.value
+                    ? const LoadingWidget()
+                    : const SizedBox(),
+              ],
+            );
+          }),
+          const ConflictWarningWidget()
+        ],
+      ),
     );
   }
 }

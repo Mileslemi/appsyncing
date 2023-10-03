@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../app_routing/app_routes.dart';
 import '../../constants/sizes.dart';
 
 class ResolveConflictScreen extends StatelessWidget {
@@ -139,7 +140,9 @@ class ResolveConflictScreen extends StatelessWidget {
                                       resolveConflictCtrl.theConflict);
                               resolveConflictCtrl.merging.value = true;
                               // setting overlays to true pops the dialog and backs one page
-                              Get.back(closeOverlays: true);
+                              // Get.back(closeOverlays: true);
+                              // go to dashboard
+                              Get.offAndToNamed(AppRoutes.dashboard);
                             },
                             child: const Text("Ok"),
                           ),

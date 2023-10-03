@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:appsyncing/constants/string_constants.dart';
@@ -27,6 +28,8 @@ class SyncController extends GetxController {
 
   RxBool syncing = false.obs;
 
+  RxBool displayConflictWarning = false.obs;
+
   Rx<DateTime> lastNoteTableSyncChecked = Rx(DateTime.now().toUtc());
 
   @override
@@ -35,28 +38,25 @@ class SyncController extends GetxController {
 
     ever(isThereConflict, (thereIs) async {
       if (!thereIs) {
+        displayConflictWarning.value = false;
         Get.log("Conflict notes don't exist");
         await checkOnlineTableChanges(
             url: UrlStrings.checkNoteTableChangesUrl());
       } else {
+        displayConflictWarning.value = true;
         Get.log("IsThereconflict value turn true");
       }
     });
 
-    // ever(noteChangesOnline, (thereAreChanges) async {
-    //   if (thereAreChanges) {
-    //     Get.log("pulling");
-    //     await pullNotes(newCheck: lastNoteTableSyncChecked.value);
-    //   } else {
-    //     // if no changes online push local notes that have sync as false and mergeConflict as false also
-    //     await pushNotes();
-    //   }
-    // });
+    // this enables periodic syncing
+    Timer.periodic(
+      const Duration(seconds: 7),
+      (timer) async {
+        // this is to make sure no new data is pulled from main if there are conflicts on local
+        await checkIfConflict();
+      },
+    );
 
-    // this is to make sure no new data is pulled from main if there are conflicts on local
-    await checkIfConflict();
-    // noteChanges.value =
-    //     await checkTableChanges(url: UrlStrings.checkNoteTableChangesUrl());
     super.onInit();
   }
 
@@ -86,6 +86,8 @@ class SyncController extends GetxController {
     List<NoteModel> conflictNotes = await NoteTable.getConflictNotes();
     if (conflictNotes.isEmpty) {
       isThereConflict.value = false;
+    } else {
+      displayConflictWarning.value = true;
     }
   }
 
