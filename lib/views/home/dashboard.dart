@@ -5,6 +5,7 @@ import 'package:appsyncing/views/home/dashboard_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../constants/sizes.dart';
 import '../../repository/authentication/authentication_controller.dart';
 
 class DashBoard extends StatelessWidget {
@@ -30,18 +31,41 @@ class DashBoard extends StatelessWidget {
           )
         ],
       ),
-      body: Stack(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Obx(
-            () => dashboardCtrl.pages.elementAt(
-              dashboardCtrl.currentPage.value,
+            () => Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                    "Welcome, ${authCtrl.user.value.firstName} ${authCtrl.user.value.lastName}"),
+                Text(
+                  "Last Sync: ${syncCtrl.lastNoteSyncToDisplay}",
+                ),
+              ],
             ),
           ),
-          Obx(
-            () => syncCtrl.syncing.value
-                ? const LoadingWidget()
-                : const SizedBox(),
-          )
+          const SizedBox(
+            height: defaultSpacing,
+          ),
+          Expanded(
+            child: Stack(
+              children: [
+                Obx(
+                  () => dashboardCtrl.pages.elementAt(
+                    dashboardCtrl.currentPage.value,
+                  ),
+                ),
+                Obx(
+                  () => syncCtrl.syncing.value
+                      ? const LoadingWidget()
+                      : const SizedBox(),
+                )
+              ],
+            ),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
