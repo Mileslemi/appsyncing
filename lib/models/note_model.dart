@@ -106,7 +106,7 @@ class NoteModel {
 //         "description": "This Note was for purpose of testing getting all modified or new Notes since last sync. Modifying Test 2.",
 //         "trackingId": "MAINNOTE3",
 //         "lastModified": "2023-09-08T09:09:18.535124Z",
-//         "user": "mileslemi",
+//         "user": "",
 //         "branchName": "MAIN"
 //     },
     return NoteModel(

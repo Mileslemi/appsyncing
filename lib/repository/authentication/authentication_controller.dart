@@ -83,7 +83,7 @@ class AuthenticationController extends GetxController {
         Success s = response as Success;
         var data = jsonDecode(s.returnValue);
 
-        //retuned as  { "authenticated": true,  "user": { "first_name": "Miles", "last_name": "Lemi", "email": "mileslemi@gmail.com" } }
+        //retuned as  { "authenticated": true,  "user": { "first_name": "", "last_name": "", "email": "" } }
         //  or { "authenticated": false}
         authenticated = data['authenticated'];
 

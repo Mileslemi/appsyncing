@@ -48,6 +48,7 @@ class ResolveConflictScreen extends StatelessWidget {
                           TextFormField(
                             controller: resolveConflictCtrl.localtitleCtrl,
                             keyboardType: TextInputType.text,
+                            enabled: false,
                             decoration: const InputDecoration(
                               labelText: "Title",
                               hintText: "Note Title",
@@ -62,6 +63,7 @@ class ResolveConflictScreen extends StatelessWidget {
                             keyboardType: TextInputType.text,
                             minLines: 4,
                             maxLines: 5,
+                            enabled: false,
                             decoration: const InputDecoration(
                               labelText: "Description",
                               hintText: "Note Description",
@@ -114,7 +116,7 @@ class ResolveConflictScreen extends StatelessWidget {
                       CupertinoAlertDialog(
                         title: const Text("Warning!"),
                         content: Text(
-                          "This will override local modifications with the right modifications.",
+                          "This will override local modifications with the modifications on right.",
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                         actions: [
