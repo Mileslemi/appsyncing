@@ -134,6 +134,7 @@ class NotesController extends GetxController {
     fetchAllOnlyLocalMadeNotes();
     fetchConflictNotes();
     fetchUnsyncedNotes();
+    refresh();
   }
 
   Future<void> fetchAllNotes() async {

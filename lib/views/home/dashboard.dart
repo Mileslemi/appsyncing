@@ -1,4 +1,3 @@
-import 'package:appsyncing/common_widgets/loading_widget.dart';
 import 'package:appsyncing/repository/syncing/sync_controller.dart';
 import 'package:appsyncing/views/addEditNote/add_edit_note.dart';
 import 'package:appsyncing/views/home/dashboard_controller.dart';
@@ -41,9 +40,26 @@ class DashBoard extends StatelessWidget {
               children: [
                 Text(
                     "Welcome, ${authCtrl.user.value.firstName} ${authCtrl.user.value.lastName}"),
-                Text(
-                  "Last Sync: ${syncCtrl.lastNoteSyncToDisplay}",
-                ),
+                Obx(() => syncCtrl.syncing.value
+                    ? Row(
+                        children: const [
+                          Text("Syncing"),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          SizedBox(
+                            height: 15,
+                            width: 15,
+                            child: CircularProgressIndicator.adaptive(
+                              strokeWidth: 2,
+                              semanticsLabel: "Syncing",
+                            ),
+                          ),
+                        ],
+                      )
+                    : Text(
+                        "Last Sync: ${syncCtrl.lastNoteSyncToDisplay}",
+                      )),
                 Row(
                   children: [
                     const Text("Auto Sync"),
@@ -62,19 +78,10 @@ class DashBoard extends StatelessWidget {
             height: defaultSpacing,
           ),
           Expanded(
-            child: Stack(
-              children: [
-                Obx(
-                  () => dashboardCtrl.pages.elementAt(
-                    dashboardCtrl.currentPage.value,
-                  ),
-                ),
-                Obx(
-                  () => syncCtrl.syncing.value
-                      ? const LoadingWidget()
-                      : const SizedBox(),
-                )
-              ],
+            child: Obx(
+              () => dashboardCtrl.pages.elementAt(
+                dashboardCtrl.currentPage.value,
+              ),
             ),
           ),
         ],

@@ -43,12 +43,12 @@ class SyncController extends GetxController {
     ever(isThereConflict, (thereIs) async {
       if (!thereIs) {
         displayConflictWarning.value = false;
-        Get.log("Conflict notes don't exist");
+        // Get.log("Conflict notes don't exist");
         await checkOnlineTableChanges(
             url: UrlStrings.checkNoteTableChangesUrl());
       } else {
         displayConflictWarning.value = true;
-        Get.log("IsThereconflict value turn true");
+        // Get.log("IsThereconflict value turn true");
       }
     });
 
@@ -68,6 +68,8 @@ class SyncController extends GetxController {
     if (syncTimer.isActive) {
       syncTimer.cancel();
       autoSyncActive.value = false;
+      // just incase it was syncing turn the circualr progress indicator off
+      syncing.value = false;
     } else {
       syncTimer = Timer.periodic(
         const Duration(seconds: 7),
