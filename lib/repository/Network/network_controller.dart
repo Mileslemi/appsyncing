@@ -117,10 +117,12 @@ class NetworkController extends GetxController {
     if (currentRoute == AppRoutes.login) {
       //We don't want to go back, as this is the first page
       Get.offAndToNamed(Get.currentRoute);
-    } else {
-      Get.back();
-      await Future.delayed(const Duration(milliseconds: 650));
-      Get.toNamed(currentRoute, preventDuplicates: true);
     }
+    // else {
+    // for the rest of the app, we don't need a reload of page for the app is made to work offline also
+    //   Get.back();
+    //   await Future.delayed(const Duration(milliseconds: 650));
+    //   Get.toNamed(currentRoute, preventDuplicates: true);
+    // }
   }
 }

@@ -40,9 +40,8 @@ Widget buildNotesDeskTop(List<NoteModel> notes) => GridView.custom(
               onTap: () => Get.to(
                     () => AddEditeNote(
                       title: "Update Note",
-                      note: note,
                     ),
-                    //arguments: {"": ""},
+                    arguments: {"note": note},
                   ),
               child: noteTile(note));
         },
@@ -58,9 +57,8 @@ Widget buildNotes(List<NoteModel> notes) => ListView.builder(
           onTap: () => Get.to(
             () => AddEditeNote(
               title: "Update Note",
-              note: note,
             ),
-            //arguments: {"": ""},
+            arguments: {"note": note},
           ),
           child: SizedBox(
             height: MediaQuery.of(context).size.height * .25,

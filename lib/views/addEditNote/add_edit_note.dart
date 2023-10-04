@@ -1,7 +1,6 @@
 import 'dart:io';
 
-import 'package:appsyncing/models/note_model.dart';
-import 'package:appsyncing/views/notes/notes_controller.dart';
+import 'package:appsyncing/views/addEditNote/add_edit_ctrl.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -10,21 +9,23 @@ import '../../common_widgets/note_extra_info.dart';
 import '../../constants/sizes.dart';
 
 class AddEditeNote extends StatelessWidget {
-  AddEditeNote({required this.title, this.note, super.key});
+  // make sure you provide a note argument, empty note for adding, and a note for updating
+  AddEditeNote({required this.title, super.key});
 
   final String title;
-  final NoteModel? note;
   // if notemodel is null, adding, else edit
 
   final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    final notesCtrl = Get.find<NotesController>();
-    if (note != null) {
-      notesCtrl.titleText.text = note?.title ?? '';
-      notesCtrl.descText.text = note?.description ?? '';
-    }
+    final addEditCtrl = Get.find<AddEditController>();
+    // if (note != null) {
+    //   // we can't do this here, phone keyboard cause a reload/build on dismiss,
+    //   // returning text inputs to waht is decalared here
+    //   addEditCtrl.titleText.text = note?.title ?? '';
+    //   addEditCtrl.descText.text = note?.description ?? '';
+    // }
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -39,12 +40,12 @@ class AddEditeNote extends StatelessWidget {
                 padding: EdgeInsets.symmetric(
                     horizontal: MediaQuery.of(context).size.width * .05),
                 children: [
-                  note == null
+                  addEditCtrl.note == null
                       ? const SizedBox()
                       : Column(
                           children: [
                             TextFormField(
-                              initialValue: note?.trackingId,
+                              initialValue: addEditCtrl.note?.trackingId,
                               enabled: false,
                               decoration: const InputDecoration(
                                   prefixIcon: Icon(Icons.track_changes)),
@@ -53,31 +54,34 @@ class AddEditeNote extends StatelessWidget {
                               height: defaultSpacing,
                             ),
                             NoteDetailRow(
-                                title: "Editor", detail: "${note?.user}"),
+                                title: "Editor",
+                                detail: "${addEditCtrl.note?.user}"),
                             NoteDetailRow(
                               title: "Created",
                               detail: ADateTimeFunctions.convertToFormat(
                                   formatNeeded: "H:mm y-MM-dd",
-                                  dateTime: note?.posted?.toLocal()),
+                                  dateTime:
+                                      addEditCtrl.note?.posted?.toLocal()),
                             ),
                             NoteDetailRow(
                                 title: "At Branch",
-                                detail: "${note?.branchName}"),
+                                detail: "${addEditCtrl.note?.branchName}"),
                             NoteDetailRow(
                               title: "Last Modified",
                               detail: ADateTimeFunctions.convertToFormat(
                                   formatNeeded: "H:mm y-MM-dd",
-                                  dateTime: note?.lastModified?.toLocal()),
+                                  dateTime: addEditCtrl.note?.lastModified
+                                      ?.toLocal()),
                             ),
-                            (note?.synced ?? false)
+                            (addEditCtrl.note?.synced ?? false)
                                 ? NoteDetailRow(
                                     title: "Master DB Id",
-                                    detail: "${note?.masterId}")
+                                    detail: "${addEditCtrl.note?.masterId}")
                                 : const SizedBox()
                           ],
                         ),
                   TextFormField(
-                    controller: notesCtrl.titleText,
+                    controller: addEditCtrl.titleText,
                     keyboardType: TextInputType.text,
                     decoration: const InputDecoration(
                       labelText: "Title",
@@ -90,7 +94,7 @@ class AddEditeNote extends StatelessWidget {
                   ),
                   TextFormField(
                     keyboardType: TextInputType.text,
-                    controller: notesCtrl.descText,
+                    controller: addEditCtrl.descText,
                     minLines: 4,
                     maxLines: 5,
                     decoration: const InputDecoration(
@@ -102,13 +106,13 @@ class AddEditeNote extends StatelessWidget {
                   const SizedBox(
                     height: defaultSpacing,
                   ),
-                  note == null
+                  addEditCtrl.note == null
                       ? ElevatedButton(
                           onPressed: () {
                             if (formKey.currentState!.validate()) {
-                              notesCtrl.addLcalNote(
-                                  title: notesCtrl.titleText.text,
-                                  desc: notesCtrl.descText.text);
+                              addEditCtrl.addLcalNote(
+                                  title: addEditCtrl.titleText.text,
+                                  desc: addEditCtrl.descText.text);
                             }
                           },
                           child: const Text("ADD"),
@@ -131,13 +135,14 @@ class AddEditeNote extends StatelessWidget {
                               child: ElevatedButton(
                                 onPressed: () {
                                   if (formKey.currentState!.validate()) {
-                                    if (note?.id != null) {
-                                      if (!(note?.mergeConflict ?? false)) {
+                                    if (addEditCtrl.note?.id != null) {
+                                      if (!(addEditCtrl.note?.mergeConflict ??
+                                          false)) {
                                         // don't update if there is conflict
-                                        notesCtrl.updateNote(
-                                            note: note!,
-                                            title: notesCtrl.titleText.text,
-                                            desc: notesCtrl.descText.text);
+                                        addEditCtrl.updateNote(
+                                            note: addEditCtrl.note!,
+                                            title: addEditCtrl.titleText.text,
+                                            desc: addEditCtrl.descText.text);
                                       } else {
                                         Get.snackbar("Invalid",
                                             "Resolve the conflict first");
@@ -153,7 +158,9 @@ class AddEditeNote extends StatelessWidget {
                 ],
               ),
             ),
-            note != null ? NoteExtraInfo(note: note) : const SizedBox(),
+            addEditCtrl.note != null
+                ? NoteExtraInfo(note: addEditCtrl.note)
+                : const SizedBox(),
           ],
         ),
       ),

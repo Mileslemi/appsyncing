@@ -17,16 +17,29 @@ class DashBoard extends StatelessWidget {
     final syncCtrl = Get.find<SyncController>();
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () async {
+            await SyncController.instance.checkIfConflict();
+          },
+          icon: const Icon(Icons.refresh),
+        ),
         title: Obx(
           () => Text("Branch: ${authCtrl.localBranch.value.branchName}"),
         ),
         centerTitle: true,
         actions: [
-          IconButton(
-            onPressed: () async {
-              await SyncController.instance.checkIfConflict();
-            },
-            icon: const Icon(Icons.refresh),
+          Obx(
+            () => Row(
+              children: [
+                const Text("Auto Sync"),
+                Switch(
+                  value: SyncController.instance.autoSyncActive.value,
+                  onChanged: (value) {
+                    SyncController.instance.toggleAutoSync();
+                  },
+                ),
+              ],
+            ),
           )
         ],
       ),
@@ -60,17 +73,6 @@ class DashBoard extends StatelessWidget {
                     : Text(
                         "Last Sync: ${syncCtrl.lastNoteSyncToDisplay}",
                       )),
-                Row(
-                  children: [
-                    const Text("Auto Sync"),
-                    Switch(
-                      value: SyncController.instance.autoSyncActive.value,
-                      onChanged: (value) {
-                        SyncController.instance.toggleAutoSync();
-                      },
-                    ),
-                  ],
-                )
               ],
             ),
           ),

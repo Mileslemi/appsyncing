@@ -6,6 +6,7 @@ import 'package:appsyncing/views/home/dashboard_controller.dart';
 import 'package:appsyncing/views/login/login_controller.dart';
 import 'package:get/get.dart';
 
+import 'views/addEditNote/add_edit_ctrl.dart';
 import 'views/conflict/resolve_conflict_ctrl.dart';
 
 class ProjectBindings implements Bindings {
@@ -18,5 +19,6 @@ class ProjectBindings implements Bindings {
     Get.lazyPut(() => DashBoardController(), fenix: true);
     Get.lazyPut(() => NotesController(), fenix: true);
     Get.lazyPut(() => ResolveConflictController(), fenix: true);
+    Get.lazyPut(() => AddEditController(), fenix: true);
   }
 }
