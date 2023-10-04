@@ -18,20 +18,13 @@ class UnSyncedNotesScreen extends StatelessWidget {
       child: Stack(
         children: [
           GetBuilder<NotesController>(builder: (controller) {
-            return Stack(
-              children: [
-                controller.unSyncedNotes.isNotEmpty
-                    ? (Platform.isIOS || Platform.isAndroid)
-                        ? buildNotes(controller.unSyncedNotes)
-                        : buildNotesDeskTop(controller.unSyncedNotes)
-                    : const Center(
-                        child: Text("No Conflict Notes...."),
-                      ),
-                controller.fetching.value
-                    ? const LoadingWidget()
-                    : const SizedBox(),
-              ],
-            );
+            return controller.unSyncedNotes.isNotEmpty
+                ? (Platform.isIOS || Platform.isAndroid)
+                    ? buildNotes(controller.unSyncedNotes)
+                    : buildNotesDeskTop(controller.unSyncedNotes)
+                : const Center(
+                    child: Text("No Conflict Notes...."),
+                  );
           }),
           const ConflictWarningWidget()
         ],

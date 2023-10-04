@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:appsyncing/common_widgets/loading_widget.dart';
 import 'package:appsyncing/common_widgets/note_display.dart';
 import 'package:appsyncing/views/notes/notes_controller.dart';
 import 'package:flutter/material.dart';
@@ -20,20 +19,13 @@ class AllNotes extends StatelessWidget {
       child: Stack(
         children: [
           GetBuilder<NotesController>(builder: (controller) {
-            return Stack(
-              children: [
-                controller.allNotes.isNotEmpty
-                    ? (Platform.isIOS || Platform.isAndroid)
-                        ? buildNotes(controller.allNotes)
-                        : buildNotesDeskTop(controller.allNotes)
-                    : const Center(
-                        child: Text("No Notes...."),
-                      ),
-                controller.fetching.value
-                    ? const LoadingWidget()
-                    : const SizedBox(),
-              ],
-            );
+            return controller.allNotes.isNotEmpty
+                ? (Platform.isIOS || Platform.isAndroid)
+                    ? buildNotes(controller.allNotes)
+                    : buildNotesDeskTop(controller.allNotes)
+                : const Center(
+                    child: Text("No Notes...."),
+                  );
           }),
           const ConflictWarningWidget()
         ],

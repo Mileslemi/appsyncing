@@ -19,20 +19,13 @@ class LocalNotes extends StatelessWidget {
       child: Stack(
         children: [
           GetBuilder<NotesController>(builder: (controller) {
-            return Stack(
-              children: [
-                controller.allNotes.isNotEmpty
-                    ? (Platform.isIOS || Platform.isAndroid)
-                        ? buildNotes(controller.localNotes)
-                        : buildNotesDeskTop(controller.localNotes)
-                    : const Center(
-                        child: Text("No Local Notes...."),
-                      ),
-                controller.fetching.value
-                    ? const LoadingWidget()
-                    : const SizedBox(),
-              ],
-            );
+            return controller.allNotes.isNotEmpty
+                ? (Platform.isIOS || Platform.isAndroid)
+                    ? buildNotes(controller.localNotes)
+                    : buildNotesDeskTop(controller.localNotes)
+                : const Center(
+                    child: Text("No Local Notes...."),
+                  );
           }),
           const ConflictWarningWidget()
         ],

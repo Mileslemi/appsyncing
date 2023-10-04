@@ -15,20 +15,13 @@ class ConflictNotesScreen extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: GetBuilder<NotesController>(builder: (controller) {
-        return Stack(
-          children: [
-            controller.conflictNotes.isNotEmpty
-                ? (Platform.isIOS || Platform.isAndroid)
-                    ? buildNotes(controller.conflictNotes)
-                    : buildNotesDeskTop(controller.conflictNotes)
-                : const Center(
-                    child: Text("No Conflict Notes...."),
-                  ),
-            controller.fetching.value
-                ? const LoadingWidget()
-                : const SizedBox(),
-          ],
-        );
+        return controller.conflictNotes.isNotEmpty
+            ? (Platform.isIOS || Platform.isAndroid)
+                ? buildNotes(controller.conflictNotes)
+                : buildNotesDeskTop(controller.conflictNotes)
+            : const Center(
+                child: Text("No Conflict Notes...."),
+              );
       }),
     );
   }
