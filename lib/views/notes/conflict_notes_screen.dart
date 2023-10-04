@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../common_widgets/loading_widget.dart';
 import '../../common_widgets/note_display.dart';
 import 'notes_controller.dart';
 

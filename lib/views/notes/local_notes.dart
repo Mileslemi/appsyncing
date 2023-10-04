@@ -4,7 +4,6 @@ import 'package:appsyncing/common_widgets/conflict_warning_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../common_widgets/loading_widget.dart';
 import '../../common_widgets/note_display.dart';
 
 import 'notes_controller.dart';

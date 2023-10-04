@@ -47,10 +47,15 @@ class SyncController extends GetxController {
         await checkOnlineTableChanges(
             url: UrlStrings.checkNoteTableChangesUrl());
       } else {
-        displayConflictWarning.value = true;
         // Get.log("IsThereconflict value turn true");
       }
     });
+
+    // ever(displayConflictWarning, (callback) {
+    //   if (callback) {
+    //     print("turned true");
+    //   }
+    // });
 
     // this enables periodic syncing
     syncTimer = Timer.periodic(
