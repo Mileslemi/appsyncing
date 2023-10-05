@@ -8,7 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../common_widgets/loading_widget.dart';
+import '../../common_widgets/offline_warning_widget.dart';
 import '../../constants/sizes.dart';
+import '../../repository/Network/network_controller.dart';
 import 'login_controller.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -181,6 +183,9 @@ class LoginScreen extends StatelessWidget {
                 ? const LoadingWidget()
                 : const SizedBox(),
           ),
+          Obx(() => NetworkController.hasInternet.value
+              ? const SizedBox()
+              : const OfflineWarning())
         ],
       ),
     ));

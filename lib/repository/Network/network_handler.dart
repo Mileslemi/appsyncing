@@ -15,6 +15,10 @@ class NetworkHandler {
   static Future<Result<String, Exception>> get(String url) async {
     try {
       final http.Response response = await client.get(Uri.parse(url));
+      // you can declare hasInterent here to true,
+      // bcuz it will be true if it passes the first sentence
+      // otherwise it would have raised an exception
+      NetworkController.hasInternet.value = true;
       switch (response.statusCode) {
         case 200:
           return Success(returnValue: response.body);
@@ -43,6 +47,10 @@ class NetworkHandler {
         Uri.parse(url),
         body: body,
       );
+      // you can declare hasInterent here to true,
+      // bcuz it will be true if it passes the first sentence
+      // otherwise it would have raised an exception
+      NetworkController.hasInternet.value = true;
       switch (response.statusCode) {
         case 200:
           return Success(returnValue: response.body);
@@ -72,6 +80,10 @@ class NetworkHandler {
         Uri.parse(url),
         body: body,
       );
+      // you can declare hasInterent here to true,
+      // bcuz it will be true if it passes the first sentence
+      // otherwise it would have raised an exception
+      NetworkController.hasInternet.value = true;
       switch (response.statusCode) {
         case 200:
           return Success(returnValue: response.body);

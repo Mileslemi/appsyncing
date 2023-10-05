@@ -1,3 +1,5 @@
+import 'package:appsyncing/common_widgets/offline_warning_widget.dart';
+import 'package:appsyncing/repository/Network/network_controller.dart';
 import 'package:appsyncing/repository/syncing/sync_controller.dart';
 import 'package:appsyncing/views/addEditNote/add_edit_note.dart';
 import 'package:appsyncing/views/home/dashboard_controller.dart';
@@ -43,49 +45,56 @@ class DashBoard extends StatelessWidget {
           )
         ],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
+      body: Stack(
         children: [
-          Obx(
-            () => Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text(
-                    "Welcome, ${authCtrl.user.value.firstName} ${authCtrl.user.value.lastName}"),
-                Obx(() => syncCtrl.syncing.value
-                    ? Row(
-                        children: const [
-                          Text("Syncing"),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          SizedBox(
-                            height: 15,
-                            width: 15,
-                            child: CircularProgressIndicator.adaptive(
-                              strokeWidth: 2,
-                              semanticsLabel: "Syncing",
-                            ),
-                          ),
-                        ],
-                      )
-                    : Text(
-                        "Last Sync: ${syncCtrl.lastNoteSyncToDisplay}",
-                      )),
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: defaultSpacing,
-          ),
-          Expanded(
-            child: Obx(
-              () => dashboardCtrl.pages.elementAt(
-                dashboardCtrl.currentPage.value,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Obx(
+                () => Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text(
+                        "Welcome, ${authCtrl.user.value.firstName} ${authCtrl.user.value.lastName}"),
+                    Obx(() => syncCtrl.syncing.value
+                        ? Row(
+                            children: const [
+                              Text("Syncing"),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              SizedBox(
+                                height: 15,
+                                width: 15,
+                                child: CircularProgressIndicator.adaptive(
+                                  strokeWidth: 2,
+                                  semanticsLabel: "Syncing",
+                                ),
+                              ),
+                            ],
+                          )
+                        : Text(
+                            "Last Sync: ${syncCtrl.lastNoteSyncToDisplay}",
+                          )),
+                  ],
+                ),
               ),
-            ),
+              const SizedBox(
+                height: defaultSpacing,
+              ),
+              Expanded(
+                child: Obx(
+                  () => dashboardCtrl.pages.elementAt(
+                    dashboardCtrl.currentPage.value,
+                  ),
+                ),
+              ),
+            ],
           ),
+          Obx(() => NetworkController.hasInternet.value
+              ? const SizedBox()
+              : const OfflineWarning())
         ],
       ),
       floatingActionButton: FloatingActionButton(
