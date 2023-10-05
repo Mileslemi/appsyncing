@@ -14,19 +14,20 @@ class AllNotes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final notesCtrl = Get.find<NotesController>();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Stack(
         children: [
-          GetBuilder<NotesController>(builder: (controller) {
-            return controller.allNotes.isNotEmpty
+          Obx(
+            () => notesCtrl.allNotes.isNotEmpty
                 ? (Platform.isIOS || Platform.isAndroid)
-                    ? buildNotes(controller.allNotes)
-                    : buildNotesDeskTop(controller.allNotes)
+                    ? buildNotes(notesCtrl.allNotes)
+                    : buildNotesDeskTop(notesCtrl.allNotes)
                 : const Center(
                     child: Text("No Notes...."),
-                  );
-          }),
+                  ),
+          ),
           const ConflictWarningWidget()
         ],
       ),

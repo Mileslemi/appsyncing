@@ -22,10 +22,7 @@ class NotesController extends GetxController {
 
   @override
   void onInit() async {
-    fetchAllNotes();
-    fetchAllOnlyLocalMadeNotes();
-    fetchConflictNotes();
-    fetchUnsyncedNotes();
+    updatesNotesList();
 
     ever(authCtrl.localBranch, (callback) => updatesNotesList());
     super.onInit();
@@ -36,7 +33,10 @@ class NotesController extends GetxController {
     fetchAllOnlyLocalMadeNotes();
     fetchConflictNotes();
     fetchUnsyncedNotes();
-    refresh();
+    allNotes.refresh();
+    localNotes.refresh();
+    conflictNotes.refresh();
+    unSyncedNotes.refresh();
   }
 
   Future<void> fetchAllNotes() async {
@@ -55,7 +55,6 @@ class NotesController extends GetxController {
       allNotes.value = await NoteTable.getAllNotes();
 
       fetching.value = false;
-      update();
     } on Exception catch (e) {
       Get.log("$e");
       Get.snackbar("Error!", "Could not fetch Notes.");
@@ -69,8 +68,6 @@ class NotesController extends GetxController {
     try {
       localNotes.value = await NoteTable.getLocalyMadeNotes(
           branchName: authCtrl.localBranch.value.branchName ?? '');
-
-      update();
     } on Exception catch (e) {
       Get.log("$e");
     }
@@ -79,8 +76,6 @@ class NotesController extends GetxController {
   Future<void> fetchUnsyncedNotes() async {
     try {
       unSyncedNotes.value = await NoteTable.getUnsycedNotes();
-
-      update();
     } on Exception catch (e) {
       Get.log("$e");
     }
@@ -89,8 +84,6 @@ class NotesController extends GetxController {
   Future<void> fetchConflictNotes() async {
     try {
       conflictNotes.value = await NoteTable.getConflictNotes();
-
-      update();
     } on Exception catch (e) {
       Get.log("$e");
     }

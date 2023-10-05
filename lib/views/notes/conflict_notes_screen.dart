@@ -11,17 +11,16 @@ class ConflictNotesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final notesCtrl = Get.find<NotesController>();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: GetBuilder<NotesController>(builder: (controller) {
-        return controller.conflictNotes.isNotEmpty
-            ? (Platform.isIOS || Platform.isAndroid)
-                ? buildNotes(controller.conflictNotes)
-                : buildNotesDeskTop(controller.conflictNotes)
-            : const Center(
-                child: Text("No Conflict Notes...."),
-              );
-      }),
+      child: Obx(() => notesCtrl.conflictNotes.isNotEmpty
+          ? (Platform.isIOS || Platform.isAndroid)
+              ? buildNotes(notesCtrl.conflictNotes)
+              : buildNotesDeskTop(notesCtrl.conflictNotes)
+          : const Center(
+              child: Text("No Conflict Notes...."),
+            )),
     );
   }
 }

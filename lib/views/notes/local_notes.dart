@@ -13,19 +13,18 @@ class LocalNotes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final notesCtrl = Get.find<NotesController>();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Stack(
         children: [
-          GetBuilder<NotesController>(builder: (controller) {
-            return controller.allNotes.isNotEmpty
-                ? (Platform.isIOS || Platform.isAndroid)
-                    ? buildNotes(controller.localNotes)
-                    : buildNotesDeskTop(controller.localNotes)
-                : const Center(
-                    child: Text("No Local Notes...."),
-                  );
-          }),
+          Obx(() => notesCtrl.allNotes.isNotEmpty
+              ? (Platform.isIOS || Platform.isAndroid)
+                  ? buildNotes(notesCtrl.localNotes)
+                  : buildNotesDeskTop(notesCtrl.localNotes)
+              : const Center(
+                  child: Text("No Local Notes...."),
+                )),
           const ConflictWarningWidget()
         ],
       ),

@@ -71,8 +71,8 @@ class NetworkController extends GetxController {
       } else {
         hasInternet.value = false;
       }
-    } on Exception catch (e) {
-      print("the excepton: $e");
+    } on Exception catch (_) {
+      // print("the excepton: $e");
       hasInternet.value = false;
     }
   }
