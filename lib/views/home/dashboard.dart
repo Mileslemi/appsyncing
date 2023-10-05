@@ -92,7 +92,8 @@ class DashBoard extends StatelessWidget {
               ),
             ],
           ),
-          Obx(() => NetworkController.hasInternet.value
+          Obx(() => (NetworkController.hasInternet.value &&
+                  syncCtrl.autoSyncActive.value)
               ? const SizedBox()
               : const OfflineWarning())
         ],

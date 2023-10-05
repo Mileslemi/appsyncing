@@ -1,4 +1,6 @@
+import 'package:appsyncing/repository/Network/network_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class OfflineWarning extends StatelessWidget {
   const OfflineWarning({super.key});
@@ -25,12 +27,16 @@ class OfflineWarning extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "No Internet.",
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall
-                      ?.apply(fontStyle: FontStyle.italic),
+                Obx(
+                  () => NetworkController.hasInternet.value
+                      ? const SizedBox()
+                      : Text(
+                          "No Internet.",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.apply(fontStyle: FontStyle.italic),
+                        ),
                 ),
                 Text(
                   "Working Offline.",
