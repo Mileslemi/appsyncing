@@ -1,10 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../app_routing/app_routes.dart';
 
 class NetworkController extends GetxController {
   static NetworkController get instance => Get.find();
@@ -75,7 +71,8 @@ class NetworkController extends GetxController {
       } else {
         hasInternet.value = false;
       }
-    } on Exception catch (_) {
+    } on Exception catch (e) {
+      print("the excepton: $e");
       hasInternet.value = false;
     }
   }

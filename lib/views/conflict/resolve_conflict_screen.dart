@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:appsyncing/common_methods/sync_notes_functions.dart';
 import 'package:appsyncing/common_widgets/loading_widget.dart';
 
@@ -34,82 +36,36 @@ class ResolveConflictScreen extends StatelessWidget {
                   decoration: const InputDecoration(
                       prefixIcon: Icon(Icons.track_changes)),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * .46,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                (Platform.isAndroid || Platform.isIOS)
+                    ? Expanded(
+                        child: ListView(
+                          padding: const EdgeInsets.all(8.0),
+                          children: [
+                            LocalModifications(
+                                resolveConflictCtrl: resolveConflictCtrl),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            OnlineModifications(
+                                resolveConflictCtrl: resolveConflictCtrl)
+                          ],
+                        ),
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text("Local Modifications"),
-                          const SizedBox(
-                            height: defaultSpacing,
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * .46,
+                            child: LocalModifications(
+                                resolveConflictCtrl: resolveConflictCtrl),
                           ),
-                          TextFormField(
-                            controller: resolveConflictCtrl.localtitleCtrl,
-                            keyboardType: TextInputType.text,
-                            enabled: false,
-                            decoration: const InputDecoration(
-                              labelText: "Title",
-                              hintText: "Note Title",
-                              prefixIcon: Icon(Icons.title),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: defaultSpacing,
-                          ),
-                          TextFormField(
-                            controller: resolveConflictCtrl.localDescCtrl,
-                            keyboardType: TextInputType.text,
-                            minLines: 4,
-                            maxLines: 5,
-                            enabled: false,
-                            decoration: const InputDecoration(
-                              labelText: "Description",
-                              hintText: "Note Description",
-                              prefixIcon: Icon(Icons.book),
-                            ),
-                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * .46,
+                            child: OnlineModifications(
+                                resolveConflictCtrl: resolveConflictCtrl),
+                          )
                         ],
                       ),
-                    ),
-                    SizedBox(
-                        width: MediaQuery.of(context).size.width * .46,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text("Online Modifications"),
-                            const SizedBox(
-                              height: defaultSpacing,
-                            ),
-                            TextFormField(
-                              controller: resolveConflictCtrl.onlinetitleCtrl,
-                              keyboardType: TextInputType.text,
-                              decoration: const InputDecoration(
-                                labelText: "Title",
-                                hintText: "Note Title",
-                                prefixIcon: Icon(Icons.title),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: defaultSpacing,
-                            ),
-                            TextFormField(
-                              controller: resolveConflictCtrl.onlineDescCtrl,
-                              keyboardType: TextInputType.text,
-                              minLines: 4,
-                              maxLines: 5,
-                              decoration: const InputDecoration(
-                                labelText: "Description",
-                                hintText: "Note Description",
-                                prefixIcon: Icon(Icons.book),
-                              ),
-                            ),
-                          ],
-                        ))
-                  ],
-                ),
                 ElevatedButton(
                   onPressed: () {
                     Get.dialog(
@@ -124,7 +80,7 @@ class ResolveConflictScreen extends StatelessWidget {
                           TextButton(
                             onPressed: () async {
                               // close the dialog first
-                              Get.back();
+                              Get.until((route) => !Get.isDialogOpen!);
                               resolveConflictCtrl.merging.value = true;
 
                               await SyncFunctions.merge(
@@ -138,7 +94,7 @@ class ResolveConflictScreen extends StatelessWidget {
                                           mergeConflict: false),
                                   noteConflict:
                                       resolveConflictCtrl.theConflict);
-                              resolveConflictCtrl.merging.value = true;
+                              resolveConflictCtrl.merging.value = false;
                               // setting overlays to true pops the dialog and backs one page
                               // Get.back(closeOverlays: true);
                               // go to dashboard
@@ -167,6 +123,98 @@ class ResolveConflictScreen extends StatelessWidget {
               : const SizedBox())
         ],
       ),
+    );
+  }
+}
+
+class OnlineModifications extends StatelessWidget {
+  const OnlineModifications({
+    super.key,
+    required this.resolveConflictCtrl,
+  });
+
+  final ResolveConflictController resolveConflictCtrl;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text("Online Modifications"),
+        const SizedBox(
+          height: defaultSpacing,
+        ),
+        TextFormField(
+          controller: resolveConflictCtrl.onlinetitleCtrl,
+          keyboardType: TextInputType.text,
+          decoration: const InputDecoration(
+            labelText: "Title",
+            hintText: "Note Title",
+            prefixIcon: Icon(Icons.title),
+          ),
+        ),
+        const SizedBox(
+          height: defaultSpacing,
+        ),
+        TextFormField(
+          controller: resolveConflictCtrl.onlineDescCtrl,
+          keyboardType: TextInputType.text,
+          minLines: 4,
+          maxLines: 5,
+          decoration: const InputDecoration(
+            labelText: "Description",
+            hintText: "Note Description",
+            prefixIcon: Icon(Icons.book),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class LocalModifications extends StatelessWidget {
+  const LocalModifications({
+    super.key,
+    required this.resolveConflictCtrl,
+  });
+
+  final ResolveConflictController resolveConflictCtrl;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text("Local Modifications"),
+        const SizedBox(
+          height: defaultSpacing,
+        ),
+        TextFormField(
+          controller: resolveConflictCtrl.localtitleCtrl,
+          keyboardType: TextInputType.text,
+          enabled: false,
+          decoration: const InputDecoration(
+            labelText: "Title",
+            hintText: "Note Title",
+            prefixIcon: Icon(Icons.title),
+          ),
+        ),
+        const SizedBox(
+          height: defaultSpacing,
+        ),
+        TextFormField(
+          controller: resolveConflictCtrl.localDescCtrl,
+          keyboardType: TextInputType.text,
+          minLines: 4,
+          maxLines: 5,
+          enabled: false,
+          decoration: const InputDecoration(
+            labelText: "Description",
+            hintText: "Note Description",
+            prefixIcon: Icon(Icons.book),
+          ),
+        ),
+      ],
     );
   }
 }

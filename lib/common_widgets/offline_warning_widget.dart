@@ -32,10 +32,8 @@ class OfflineWarning extends StatelessWidget {
                       ? const SizedBox()
                       : Text(
                           "No Internet.",
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall
-                              ?.apply(fontStyle: FontStyle.italic),
+                          style: Theme.of(context).textTheme.bodySmall?.apply(
+                              fontStyle: FontStyle.italic, color: Colors.white),
                         ),
                 ),
                 Text(
@@ -43,7 +41,7 @@ class OfflineWarning extends StatelessWidget {
                   style: Theme.of(context)
                       .textTheme
                       .bodySmall
-                      ?.apply(fontStyle: FontStyle.italic),
+                      ?.apply(fontStyle: FontStyle.italic, color: Colors.white),
                 ),
               ],
             )

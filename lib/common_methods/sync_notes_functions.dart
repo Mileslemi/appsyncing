@@ -145,11 +145,11 @@ class SyncFunctions {
     if (mergedNote != null && noteConflict != null) {
       await NoteTable.update(mergedNote);
       // delete the conflict row
-      await NoteConflictTable.deleteConflict(noteConflict.id!);
+      NoteConflictTable.deleteConflict(noteConflict.id!);
       // update all notes lists
       NotesController.instance.updatesNotesList();
       // check if any other conflict, if not, it initiate syncing
-      await SyncController.instance.checkIfConflict();
+      SyncController.instance.checkIfConflict();
     } else {
       Get.log("Merge fn receiving a null mergedNote");
     }
