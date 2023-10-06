@@ -98,7 +98,7 @@ class ResolveConflictScreen extends StatelessWidget {
                               // setting overlays to true pops the dialog and backs one page
                               // Get.back(closeOverlays: true);
                               // go to dashboard
-                              Get.offAndToNamed(AppRoutes.dashboard);
+                              Get.offAllNamed(AppRoutes.dashboard);
                             },
                             child: const Text("Ok"),
                           ),
