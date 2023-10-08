@@ -85,9 +85,7 @@ class DashBoard extends StatelessWidget {
               ),
               Expanded(
                 child: Obx(
-                  () => dashboardCtrl.pages.elementAt(
-                    dashboardCtrl.currentPage.value,
-                  ),
+                  () => dashboardCtrl.currentPageWidget.value,
                 ),
               ),
             ],

@@ -15,9 +15,9 @@ class ProjectBindings implements Bindings {
     Get.put(AuthenticationController(), permanent: true);
     Get.put(NetworkController(), permanent: true);
     Get.put(SyncController(), permanent: true);
+    Get.put(NotesController(), permanent: true);
     Get.lazyPut(() => LoginController(), fenix: true);
     Get.lazyPut(() => DashBoardController(), fenix: true);
-    Get.lazyPut(() => NotesController(), fenix: true);
     Get.lazyPut(() => ResolveConflictController(), fenix: true);
     Get.lazyPut(() => AddEditController(), fenix: true);
   }
